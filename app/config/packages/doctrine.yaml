@@ -5,6 +5,12 @@ doctrine:
         # IMPORTANT: You MUST configure your server version,
         # either here or in the DATABASE_URL env var (see .env file)
         #server_version: '13'
+        types:
+            property_id: 'App\Entity\Property\IdType'
+            property_email: 'App\Entity\Property\EmailType'
+            property_role: 'App\Entity\Property\RoleType'
+            property_status: 'App\Entity\Property\StatusType'
+            property_unit: 'App\Entity\Property\UnitType'
     orm:
         auto_generate_proxy_classes: true
         naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
