@@ -9,7 +9,7 @@ use Symfony\Component\Security\Core\User\UserInterface as SymfonyUserInterface;
 
 abstract class AbstractedUser
 {
-    public const ROLE_DEFAULT = 'ROLE_USER';
+    public const ROLE_USER = 'ROLE_USER';
     public const ROLE_SUPER_ADMIN = 'ROLE_SUPER_ADMIN';
 
     protected Id $id;
