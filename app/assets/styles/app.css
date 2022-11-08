@@ -1,0 +1,6 @@
+@import '~mdb-ui-kit/css/mdb.min.css';
+@import "login.css";
+
+body {
+    background-color: lightgray;
+}

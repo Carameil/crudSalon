@@ -2,3 +2,5 @@
 .DS_Store
 db/*
 ./docker/db/*
+docker/db/*
+docker/db
