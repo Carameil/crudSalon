@@ -7,6 +7,7 @@ use Webmozart\Assert\Assert;
 class Role
 {
     public const ROLE_USER = 'ROLE_USER';
+    public const ROLE_EMPLOYEE = 'ROLE_EMPLOYEE';
     public const ROLE_ADMIN = 'ROLE_ADMIN';
 
     private string $name;
@@ -15,6 +16,7 @@ class Role
     {
         Assert::oneOf($name, [
                 self::ROLE_USER,
+                self::ROLE_EMPLOYEE,
                 self::ROLE_ADMIN,
         ]);
 
@@ -24,6 +26,11 @@ class Role
     public static function user(): self
     {
         return new self(self::ROLE_USER);
+    }
+
+    public static function employee(): self
+    {
+        return new self(self::ROLE_EMPLOYEE);
     }
 
     public static function admin(): self

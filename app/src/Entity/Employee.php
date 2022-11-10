@@ -3,12 +3,9 @@
 namespace App\Entity;
 
 use App\Entity\Property\Email;
-use App\Entity\Property\Id;
+use App\Entity\Property\Role;
 use App\Entity\User\User;
 use App\Repository\EmployeeRepository;
-use DateTimeImmutable;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -18,18 +15,18 @@ class Employee extends User
     public const TYPE = 'employee';
 
     #[ORM\Column(type: "string", length: 15)]
-    private string $phone;
+    protected string $phone;
 
-    #[ORM\Column(type: "string", length: 100)]
-    private ?string $address = null;
+    #[ORM\Column(type: "string", length: 100, nullable: true)]
+    protected ?string $address = null;
 
     #[ORM\ManyToOne(inversedBy: 'employees')]
     private Position $position;
 
-    public function __construct(Id $id, string $firstName, $lastName, Email $email, $middleName = null)
+    public function __construct(string $firstName, $lastName, Email $email, $middleName = null)
     {
-        parent::__construct($id, $firstName, $lastName, $email, $middleName);
-        $this->visits = new ArrayCollection();
+        parent::__construct($firstName, $lastName, $email, $middleName);
+        $this->changeRole(Role::employee());
     }
 
     public function getPhone(): string

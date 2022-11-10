@@ -3,13 +3,8 @@
 namespace App\Entity;
 
 use App\Entity\Property\Enum\Unit;
-use App\Entity\Property\Id;
 use App\Repository\MaterialRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\Mapping\JoinColumn;
-use Doctrine\ORM\Mapping\JoinTable;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: MaterialRepository::class)]
@@ -17,8 +12,8 @@ class Material
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: "property_id")]
-    private Id $id;
+    #[ORM\Column(type: 'integer')]
+    private int $id;
 
     #[ORM\Column(type: "string", length: 100)]
     private string $name;
@@ -39,7 +34,7 @@ class Material
     #[ORM\Column(type: "property_unit", length: 5)]
     private Unit $unit;
 
-    public function getId(): Id
+    public function getId(): int
     {
         return $this->id;
     }

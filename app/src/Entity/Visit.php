@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use App\Entity\Property\Id;
 use App\Repository\VisitRepository;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -11,8 +10,8 @@ class Visit
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'property_id')]
-    private Id $id;
+    #[ORM\Column(type: 'integer')]
+    private int $id;
 
     #[ORM\ManyToOne(targetEntity: Service::class)]
     #[ORM\JoinColumn(name: 'service_id', nullable: false)]
@@ -29,7 +28,7 @@ class Visit
     #[ORM\Column(type: 'datetime_immutable')]
     private \DateTimeInterface $date;
 
-    public function getId(): Id
+    public function getId(): int
     {
         return $this->id;
     }

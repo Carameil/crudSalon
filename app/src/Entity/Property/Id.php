@@ -2,6 +2,7 @@
 
 namespace App\Entity\Property;
 
+use Ramsey\Uuid\Uuid;
 use Webmozart\Assert\Assert;
 
 class Id
@@ -12,6 +13,11 @@ class Id
     {
         Assert::notEmpty($value);
         $this->value = $value;
+    }
+
+    public static function next(): self
+    {
+        return new self(Uuid::uuid4()->toString());
     }
 
     public function getValue(): string

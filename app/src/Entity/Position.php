@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use App\Entity\Property\Id;
 use App\Repository\PositionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -13,9 +12,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Position
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'property_id')]
-    private Id $id;
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
+    #[ORM\Column(type: 'integer')]
+    private int $id;
 
     #[ORM\Column(type: 'string', length: 50, unique: true)]
     private string $name;
@@ -35,7 +34,7 @@ class Position
         $this->employees = new ArrayCollection();
     }
 
-    public function getId(): ?Id
+    public function getId(): int
     {
         return $this->id;
     }
@@ -70,6 +69,11 @@ class Position
     public function setSalary(int $salary): void
     {
         $this->salary = $salary;
+    }
+
+    public function setId(Id $id): void
+    {
+        $this->id = $id;
     }
 
     public function getEmployees(): ?Collection

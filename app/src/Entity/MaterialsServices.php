@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use App\Entity\Property\Enum\Unit;
-use App\Entity\Property\Id;
 use App\Repository\MaterialsServicesRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -13,8 +12,8 @@ class MaterialsServices
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'property_id')]
-    private Id $id;
+    #[ORM\Column(type: 'integer')]
+    private int $id;
 
     #[ORM\ManyToOne(targetEntity: Material::class)]
     #[ORM\JoinColumn(name: 'material_id', nullable: false)]
@@ -31,7 +30,7 @@ class MaterialsServices
     #[ORM\Column(type: "property_unit", length: 5, options: ['default' => Unit::Thing])]
     private Unit $unit;
 
-    public function getId(): Id
+    public function getId(): int
     {
         return $this->id;
     }

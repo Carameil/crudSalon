@@ -12,7 +12,7 @@ abstract class AbstractedUser
     public const ROLE_USER = 'ROLE_USER';
     public const ROLE_SUPER_ADMIN = 'ROLE_SUPER_ADMIN';
 
-    protected Id $id;
+    private int $id;
 
     protected string $firstName;
 
@@ -99,7 +99,7 @@ abstract class AbstractedUser
         $this->plainPassword = null;
     }
 
-    public function getId(): Id
+    public function getId(): int
     {
         return $this->id;
     }

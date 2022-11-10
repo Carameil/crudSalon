@@ -5,17 +5,16 @@ namespace App\Entity\User;
 use App\Entity\Client;
 use App\Entity\Employee;
 use App\Entity\Property\Email;
-use App\Entity\Property\Id;
 use App\Entity\Property\Role;
 use App\Entity\User\Enum\Status;
 use App\Entity\User\Enum\Subordinate;
 use App\Repository\UserRepository;
-use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\DiscriminatorColumn;
 use Doctrine\ORM\Mapping\DiscriminatorMap;
 use Doctrine\ORM\Mapping\InheritanceType;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
@@ -23,15 +22,16 @@ use Gedmo\Mapping\Annotation as Gedmo;
 #[DiscriminatorColumn(name: 'type', type: 'string')]
 #[DiscriminatorMap([
         'client' => Client::class,
-        'employee' => Employee::class
+        'employee' => Employee::class,
+        null => User::class
 ])]
 
-class User extends AbstractedUser
+class User extends AbstractedUser implements PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: "property_id")]
-    protected Id $id;
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
+    #[ORM\Column(type: 'integer')]
+    private int $id;
 
     #[ORM\Column(type: 'string', length: 80)]
     protected string $firstName;
@@ -39,7 +39,7 @@ class User extends AbstractedUser
     #[ORM\Column(type: 'string', length: 80)]
     protected string $lastName;
 
-    #[ORM\Column(type: 'string', length: 80)]
+    #[ORM\Column(type: 'string', length: 80, nullable: true)]
     protected ?string $middleName = null;
 
     #[ORM\Column(type: "property_email", length: 180, unique:true)]
@@ -54,17 +54,16 @@ class User extends AbstractedUser
     #[ORM\Column(type: "property_role", length: 16)]
     private Role $role;
 
-    #[ORM\Column(type: 'datetime_immutable')]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     #[Gedmo\Timestampable(on: 'create')]
     protected ?\DateTimeInterface $createdAt = null;
 
-    #[ORM\Column(type: 'datetime_immutable')]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     #[Gedmo\Timestampable(on: 'update')]
     protected ?\DateTimeInterface $updatedAt = null;
 
-    protected function __construct(Id $id, $firstName, $lastName, Email $email, $middleName = null)
+    protected function __construct($firstName, $lastName, Email $email, $middleName = null)
     {
-        $this->id = $id;
         $this->firstName = $firstName;
         $this->lastName = $lastName;
         $this->middleName = $middleName;
@@ -74,15 +73,15 @@ class User extends AbstractedUser
     }
 
     public static function create(
-            Id $id,
             string $firstName,
             string $lastName,
             Email $email,
+            string $passwordHash = null,
             string $middleName = null,
-            string $passwordHash = null
     ): self
     {
-        $user = new self($id, $firstName, $lastName, $email, $middleName);
+        $user = new self($firstName, $lastName, $email, $middleName);
+        $user->email = $email;
         $user->passwordHash = $passwordHash;
 
         return $user;
@@ -122,11 +121,27 @@ class User extends AbstractedUser
     }
 
     /**
-     * @param Id $id
+     * @param string $firstName
      */
-    public function setId(Id $id): void
+    public function setFirstName(string $firstName): void
     {
-        $this->id = $id;
+        $this->firstName = $firstName;
+    }
+
+    /**
+     * @param string $lastName
+     */
+    public function setLastName(string $lastName): void
+    {
+        $this->lastName = $lastName;
+    }
+
+    /**
+     * @param string|null $middleName
+     */
+    public function setMiddleName(?string $middleName): void
+    {
+        $this->middleName = $middleName;
     }
 
     /**
@@ -153,5 +168,21 @@ class User extends AbstractedUser
     public function isEmployee(string $subordinate): bool
     {
         return Subordinate::SUB_EMPLOYEE === $subordinate;
+    }
+
+    public function changeRole(Role $role): void
+    {
+        if ($this->role->isEqual($role)) {
+            throw new \DomainException('Role is already same.');
+        }
+        $this->role = $role;
+    }
+
+    public function changeStatus(Status $status): void
+    {
+        if ($this->status === $status) {
+            throw new \DomainException('Status is already same.');
+        }
+        $this->status = $status;
     }
 }
