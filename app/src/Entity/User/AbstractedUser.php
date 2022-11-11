@@ -4,13 +4,13 @@ namespace App\Entity\User;
 
 use App\Entity\Property\Email;
 use App\Entity\Property\Id;
-use App\Entity\Property\Role;
 use Symfony\Component\Security\Core\User\UserInterface as SymfonyUserInterface;
 
 abstract class AbstractedUser
 {
     public const ROLE_USER = 'ROLE_USER';
-    public const ROLE_SUPER_ADMIN = 'ROLE_SUPER_ADMIN';
+    public const ROLE_EMPLOYEE = 'ROLE_EMPLOYEE';
+    public const ROLE_ADMIN = 'ROLE_ADMIN';
 
     private int $id;
 
@@ -26,8 +26,6 @@ abstract class AbstractedUser
 
     protected ?string $emailCanonical = null;
 
-    protected ?string $password = null;
-
     protected ?string $plainPassword = null;
 
     protected ?\DateTimeInterface $lastLogin = null;
@@ -36,86 +34,39 @@ abstract class AbstractedUser
 
     protected ?\DateTimeInterface $passwordRequestedAt = null;
 
-    //protected array $roles = [];
-
-    protected ?\DateTimeInterface $createdAt = null;
-
-    protected ?\DateTimeInterface $updatedAt = null;
+    protected array $roles;
 
     public function __toString(): string
     {
         return $this->getFullName();
     }
 
-    /**
-     * @return mixed[]
-     */
-    public function __serialize(): array
+    public function addRole(string $role): void
     {
-        return [
-                $this->password,
-                $this->usernameCanonical,
-                $this->firstName,
-                $this->lastName,
-                $this->middleName,
-                $this->id,
-                $this->email,
-                $this->emailCanonical,
-        ];
-    }
+        $role = strtoupper($role);
 
-    /**
-     * @param mixed[] $data
-     */
-    public function __unserialize(array $data): void
-    {
-        [
-                $this->password,
-                $this->usernameCanonical,
-                $this->firstName,
-                $this->lastName,
-                $this->middleName,
-                $this->id,
-                $this->email,
-                $this->emailCanonical
-        ] = $data;
+        if (!\in_array($role, $this->roles, true)) {
+            $this->roles[] = $role;
+        }
     }
-
-//    public function addRole(string $role): void
-//    {
-//        $role = strtoupper($role);
-//
-//        if ($role === static::ROLE_DEFAULT) {
-//            return;
-//        }
-//
-//        if (!\in_array($role, $this->roles, true)) {
-//            $this->roles[] = $role;
-//        }
-//    }
 
     public function eraseCredentials(): void
     {
         $this->plainPassword = null;
     }
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getFullName(): string
+    public function getFullName(): ?string
     {
         return implode(' ', array_filter([
                 $this->lastName,
                 $this->firstName,
                 $this->middleName
         ]));
-    }
-
-    public function getUserIdentifier(): Email
-    {
-        return $this->email;
     }
 
     public function getUsernameCanonical(): ?string
@@ -134,11 +85,6 @@ abstract class AbstractedUser
         return $this->emailCanonical;
     }
 
-    public function getPassword(): ?string
-    {
-        return $this->password;
-    }
-
     public function getPlainPassword(): ?string
     {
         return $this->plainPassword;
@@ -154,7 +100,7 @@ abstract class AbstractedUser
         return $this->confirmationToken;
     }
 
-    public function getFirstName(): string
+    public function getFirstName(): ?string
     {
         return $this->firstName;
     }
@@ -164,25 +110,15 @@ abstract class AbstractedUser
         return $this->lastName;
     }
 
-    public function getMiddleName(): ?string
+    public function getMiddleName(): string
     {
         return $this->middleName;
     }
 
-//    public function getRoles(): array
-//    {
-//        $roles = $this->roles;
-//
-//        // we need to make sure to have at least one role
-//        $roles[] = static::ROLE_DEFAULT;
-//
-//        return array_values(array_unique($roles));
-//    }
-
-//    public function hasRole(string $role): bool
-//    {
-//        return \in_array(strtoupper($role), $this->getRoles(), true);
-//    }
+    public function hasRole(string $role): bool
+    {
+        return \in_array(strtoupper($role), $this->getRoles(), true);
+    }
 
     public function isAccountNonExpired(): bool
     {
@@ -199,18 +135,18 @@ abstract class AbstractedUser
         return true;
     }
 
-//    public function isSuperAdmin(): bool
-//    {
-//        return $this->hasRole(static::ROLE_SUPER_ADMIN);
-//    }
-//
-//    public function removeRole(string $role): void
-//    {
-//        if (false !== $key = array_search(strtoupper($role), $this->roles, true)) {
-//            unset($this->roles[$key]);
-//            $this->roles = array_values($this->roles);
-//        }
-//    }
+    public function isAdmin(): bool
+    {
+        return $this->hasRole(static::ROLE_ADMIN);
+    }
+
+    public function removeRole(string $role): void
+    {
+        if (false !== $key = array_search(strtoupper($role), $this->roles, true)) {
+            unset($this->roles[$key]);
+            $this->roles = array_values($this->roles);
+        }
+    }
 
     public function setUsernameCanonical(?string $usernameCanonical): void
     {
@@ -225,20 +161,6 @@ abstract class AbstractedUser
     public function setEmailCanonical(?string $emailCanonical): void
     {
         $this->emailCanonical = $emailCanonical;
-    }
-
-    public function setPassword(?string $password): void
-    {
-        $this->password = $password;
-    }
-
-    public function setSuperAdmin(bool $boolean): void
-    {
-        if (true === $boolean) {
-            $this->addRole(static::ROLE_SUPER_ADMIN);
-        } else {
-            $this->removeRole(static::ROLE_SUPER_ADMIN);
-        }
     }
 
     public function setPlainPassword(?string $password): void
@@ -273,22 +195,18 @@ abstract class AbstractedUser
         return null !== $passwordRequestedAt && $passwordRequestedAt->getTimestamp() + $ttl > time();
     }
 
-//    public function setRoles(array $roles): void
-//    {
-//        $this->roles = [];
-//
-//        foreach ($roles as $role) {
-//            $this->addRole($role);
-//        }
-//    }
+    public function setRoles(array $roles): void
+    {
+        $this->roles = [];
+
+        foreach ($roles as $role) {
+            $this->addRole($role);
+        }
+    }
 
     public function isEqualTo(SymfonyUserInterface $user): bool
     {
         if (!$user instanceof self) {
-            return false;
-        }
-
-        if ($this->password !== $user->getPassword()) {
             return false;
         }
 
@@ -299,33 +217,13 @@ abstract class AbstractedUser
         return true;
     }
 
-    public function setCreatedAt(?\DateTimeInterface $createdAt = null): void
+    public function getRealRoles(): array
     {
-        $this->createdAt = $createdAt;
+        return $this->roles;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
+    public function setRealRoles(array $roles): void
     {
-        return $this->createdAt;
+        $this->setRoles($roles);
     }
-
-    public function setUpdatedAt(?\DateTimeInterface $updatedAt = null): void
-    {
-        $this->updatedAt = $updatedAt;
-    }
-
-    public function getUpdatedAt(): ?\DateTimeInterface
-    {
-        return $this->updatedAt;
-    }
-
-//    public function getRealRoles(): array
-//    {
-//        return $this->roles;
-//    }
-//
-//    public function setRealRoles(array $roles): void
-//    {
-//        $this->setRoles($roles);
-//    }
 }

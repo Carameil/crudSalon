@@ -26,7 +26,7 @@ class Position
     #[ORM\OneToMany(mappedBy: 'position', targetEntity: Employee::class)]
     private ?Collection $employees = null;
 
-    #[ORM\OneToMany(mappedBy: 'service', targetEntity: Service::class)]
+    #[ORM\OneToMany(mappedBy: 'position', targetEntity: Service::class)]
     private ?Collection $services = null;
 
     public function __construct()
@@ -71,7 +71,7 @@ class Position
         $this->salary = $salary;
     }
 
-    public function setId(Id $id): void
+    public function setId(int $id): void
     {
         $this->id = $id;
     }

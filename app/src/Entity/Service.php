@@ -19,7 +19,7 @@ class Service
     #[ORM\Column(type: 'string', length: 100)]
     private string $name;
 
-    #[ORM\ManyToOne(inversedBy: 'services')]
+    #[ORM\ManyToOne(targetEntity: Position::class, inversedBy: 'services')]
     private Position $position;
 
     #[ORM\Column(type: 'decimal', precision: 6, scale: 2, options: ['default' => 0])]

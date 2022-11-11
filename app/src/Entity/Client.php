@@ -23,6 +23,7 @@ class Client extends User
     public function __construct(string $firstName, $lastName, Email $email, $middleName = null)
     {
         parent::__construct($firstName, $lastName, $email, $middleName);
+        $this->addRole(self::ROLE_USER);
         $this->visits = new ArrayCollection();
     }
 

@@ -24,10 +24,10 @@ abstract class AbstractEnumType extends Type
 
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
-        if (false === enum_exists(self::getEnumsClass(), true)) {
+        if (false === enum_exists(static::getEnumsClass(), true)) {
             throw new \LogicException("This class should be an enum");
         }
         // 🔥 https://www.php.net/manual/en/backedenum.tryfrom.php
-        return self::getEnumsClass()::tryFrom($value);
+        return static::getEnumsClass()::tryFrom($value);
     }
 }

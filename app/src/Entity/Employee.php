@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use App\Entity\Property\Email;
-use App\Entity\Property\Role;
 use App\Entity\User\User;
 use App\Repository\EmployeeRepository;
 use Doctrine\ORM\Mapping as ORM;
@@ -26,7 +25,7 @@ class Employee extends User
     public function __construct(string $firstName, $lastName, Email $email, $middleName = null)
     {
         parent::__construct($firstName, $lastName, $email, $middleName);
-        $this->changeRole(Role::employee());
+        $this->addRole(self::ROLE_EMPLOYEE);
     }
 
     public function getPhone(): string

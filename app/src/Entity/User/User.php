@@ -5,7 +5,6 @@ namespace App\Entity\User;
 use App\Entity\Client;
 use App\Entity\Employee;
 use App\Entity\Property\Email;
-use App\Entity\Property\Role;
 use App\Entity\User\Enum\Status;
 use App\Entity\User\Enum\Subordinate;
 use App\Repository\UserRepository;
@@ -13,8 +12,10 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\DiscriminatorColumn;
 use Doctrine\ORM\Mapping\DiscriminatorMap;
 use Doctrine\ORM\Mapping\InheritanceType;
-use Gedmo\Mapping\Annotation as Gedmo;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
@@ -23,11 +24,15 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 #[DiscriminatorMap([
         'client' => Client::class,
         'employee' => Employee::class,
-        null => User::class
+        'user' => User::class
 ])]
 
-class User extends AbstractedUser implements PasswordAuthenticatedUserInterface
+class User extends AbstractedUser implements PasswordAuthenticatedUserInterface, UserInterface
 {
+
+    use TimestampableEntity;
+    use SoftDeleteableEntity;
+
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'AUTO')]
     #[ORM\Column(type: 'integer')]
@@ -51,16 +56,8 @@ class User extends AbstractedUser implements PasswordAuthenticatedUserInterface
     #[ORM\Column(name: "passwordHash", type: "string", nullable: true)]
     private ?string $passwordHash = null;
 
-    #[ORM\Column(type: "property_role", length: 16)]
-    private Role $role;
-
-    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-    #[Gedmo\Timestampable(on: 'create')]
-    protected ?\DateTimeInterface $createdAt = null;
-
-    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-    #[Gedmo\Timestampable(on: 'update')]
-    protected ?\DateTimeInterface $updatedAt = null;
+    #[ORM\Column(type: "json")]
+    protected array $roles = [];
 
     protected function __construct($firstName, $lastName, Email $email, $middleName = null)
     {
@@ -69,7 +66,6 @@ class User extends AbstractedUser implements PasswordAuthenticatedUserInterface
         $this->middleName = $middleName;
         $this->email = $email;
         $this->status = Status::STATUS_ACTIVE;
-        $this->role = Role::user();
     }
 
     public static function create(
@@ -83,10 +79,9 @@ class User extends AbstractedUser implements PasswordAuthenticatedUserInterface
         $user = new self($firstName, $lastName, $email, $middleName);
         $user->email = $email;
         $user->passwordHash = $passwordHash;
-
+        $user->addRole(self::ROLE_ADMIN);
         return $user;
     }
-
 
     /**
      * @return Status
@@ -97,17 +92,9 @@ class User extends AbstractedUser implements PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Role
-     */
-    public function getRole(): Role
-    {
-        return $this->role;
-    }
-
-    /**
      * @return string|null
      */
-    public function getPasswordHash(): ?string
+    public function getPassword(): ?string
     {
         return $this->passwordHash;
     }
@@ -115,9 +102,19 @@ class User extends AbstractedUser implements PasswordAuthenticatedUserInterface
     /**
      * @param string|null $passwordHash
      */
-    public function setPasswordHash(?string $passwordHash): void
+    public function setPassword(?string $passwordHash): void
     {
         $this->passwordHash = $passwordHash;
+    }
+
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = self::ROLE_USER;
+
+
+        return array_unique($roles);
     }
 
     /**
@@ -152,14 +149,6 @@ class User extends AbstractedUser implements PasswordAuthenticatedUserInterface
         $this->status = $status;
     }
 
-    /**
-     * @param Role $role
-     */
-    public function setRole(Role $role): void
-    {
-        $this->role = $role;
-    }
-
     public function isClient(string $subordinate): bool
     {
         return Subordinate::SUB_CLIENT === $subordinate;
@@ -170,19 +159,16 @@ class User extends AbstractedUser implements PasswordAuthenticatedUserInterface
         return Subordinate::SUB_EMPLOYEE === $subordinate;
     }
 
-    public function changeRole(Role $role): void
-    {
-        if ($this->role->isEqual($role)) {
-            throw new \DomainException('Role is already same.');
-        }
-        $this->role = $role;
-    }
-
     public function changeStatus(Status $status): void
     {
         if ($this->status === $status) {
             throw new \DomainException('Status is already same.');
         }
         $this->status = $status;
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return $this->email->getValue();
     }
 }
