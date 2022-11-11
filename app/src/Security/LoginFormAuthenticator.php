@@ -15,9 +15,9 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
+use Symfony\Component\Security\Http\Authenticator\Passport\Badge\CsrfTokenBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\RememberMeBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
-use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\CustomCredentials;
 use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordCredentials;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 
@@ -28,7 +28,6 @@ class LoginFormAuthenticator extends AbstractAuthenticator
         private readonly UserRepository $userRepository,
         private readonly RouterInterface $router,
         private readonly UserPasswordHasherInterface $passwordHasher,
-        private readonly ManagerRegistry $managerRegistry,
     ) {}
 
     public function supports(Request $request): ?bool
@@ -41,6 +40,7 @@ class LoginFormAuthenticator extends AbstractAuthenticator
     {
         $email = $request->request->get('email');
         $password = $request->request->get('password');
+        $csrfToken = $request->request->get('_csrf_token');
 
         return new Passport(
             new UserBadge($email, function ($userIdentifier) {
@@ -54,6 +54,10 @@ class LoginFormAuthenticator extends AbstractAuthenticator
             }),
             new PasswordCredentials($password),
             [
+                new CsrfTokenBadge(
+                    'authenticate',
+                    $csrfToken
+                ),
                 new RememberMeBadge()
             ]
         );
