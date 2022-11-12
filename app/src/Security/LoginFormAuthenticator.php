@@ -65,6 +65,14 @@ class LoginFormAuthenticator extends AbstractAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
+        $email = $request->request->get('email');
+        $user = $this->userRepository->findOneBy(['email' => $email]);
+
+        if($user && $user->isAdmin()) {
+            return new RedirectResponse(
+                $this->router->generate('admin')
+            );
+        }
         return new RedirectResponse(
             $this->router->generate('app_home')
         );

@@ -13,7 +13,29 @@
             {{ encore_entry_script_tags('app') }}
         {% endblock %}
     </head>
+
     <body>
-        {% block body %}{% endblock %}
+
+<!-- Navbar -->
+{% include '_nav.html.twig' %}
+<!-- Navbar -->
+
+    <div class="app-body">
+        <div class="sidebar">
+            <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+                {{ knp_menu_render('main') }}
+            </nav>
+        </div>
+        <main class="main">
+            {% block breadcrumbs %}{% endblock %}
+            <div class="container-fluid">
+                {% include '_flashes.html.twig' %}
+                {% block body %}{% endblock %}
+            </div>
+        </main>
+    </div>
+
+    {% include '_footer.html.twig' %}
+
     </body>
 </html>
