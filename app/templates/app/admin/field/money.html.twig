@@ -1,0 +1,13 @@
+{% block _Position_number_field_widget %}
+
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text">RUB</span>
+        </div>
+        <input type="text" id="Position_salary" name="Position[salary]"
+               class="form-control" aria-label="Amount (to the nearest dollar)" value="{{ value/1 }}">
+        <div class="input-group-append">
+            <span class="input-group-text">.00</span>
+        </div>
+    </div>
+{% endblock %}

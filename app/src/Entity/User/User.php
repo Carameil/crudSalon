@@ -29,14 +29,17 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class User extends AbstractedUser implements PasswordAuthenticatedUserInterface, UserInterface
 {
-
     use TimestampableEntity;
     use SoftDeleteableEntity;
+
+    public const TYPE_CLIENT = 'client';
+    public const TYPE_EMPLOYEE = 'employee';
+    private const TYPE_USER = 'user';
 
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'AUTO')]
     #[ORM\Column(type: 'integer')]
-    private int $id;
+    private ?int $id = null;
 
     #[ORM\Column(type: 'string', length: 80)]
     protected string $firstName;
@@ -47,11 +50,11 @@ class User extends AbstractedUser implements PasswordAuthenticatedUserInterface,
     #[ORM\Column(type: 'string', length: 80, nullable: true)]
     protected ?string $middleName = null;
 
-    #[ORM\Column(type: "property_email", length: 180, unique:true)]
-    protected Email $email;
+    #[ORM\Column(type: "string", length: 180, unique:true)]
+    protected string $email;
 
-    #[ORM\Column(type: "property_status", length: 16, options: ['default' => Status::STATUS_ACTIVE])]
-    private Status $status;
+    #[ORM\Column(type: "string", length: 16, options: ['default' => Status::STATUS_ACTIVE])]
+    private string $status;
 
     #[ORM\Column(name: "passwordHash", type: "string", nullable: true)]
     private ?string $passwordHash = null;
@@ -59,7 +62,7 @@ class User extends AbstractedUser implements PasswordAuthenticatedUserInterface,
     #[ORM\Column(type: "json")]
     protected array $roles = [];
 
-    protected function __construct($firstName, $lastName, Email $email, $middleName = null)
+    protected function __construct($firstName, $lastName, string $email, $middleName = null)
     {
         $this->firstName = $firstName;
         $this->lastName = $lastName;
@@ -71,7 +74,7 @@ class User extends AbstractedUser implements PasswordAuthenticatedUserInterface,
     public static function create(
             string $firstName,
             string $lastName,
-            Email $email,
+            string $email,
             string $passwordHash = null,
             string $middleName = null,
     ): self
@@ -83,10 +86,20 @@ class User extends AbstractedUser implements PasswordAuthenticatedUserInterface,
         return $user;
     }
 
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getType(): string
+    {
+        return self::TYPE_USER;
+    }
+
     /**
-     * @return Status
+     * @return string
      */
-    public function getStatus(): Status
+    public function getStatus(): string
     {
         return $this->status;
     }
@@ -142,9 +155,9 @@ class User extends AbstractedUser implements PasswordAuthenticatedUserInterface,
     }
 
     /**
-     * @param Status $status
+     * @param string $status
      */
-    public function setStatus(Status $status): void
+    public function setStatus(string $status): void
     {
         $this->status = $status;
     }
@@ -169,6 +182,6 @@ class User extends AbstractedUser implements PasswordAuthenticatedUserInterface,
 
     public function getUserIdentifier(): string
     {
-        return $this->email->getValue();
+        return $this->email;
     }
 }

@@ -19,7 +19,7 @@ class Position
     #[ORM\Column(type: 'string', length: 50, unique: true)]
     private string $name;
 
-    #[ORM\Column(type: 'decimal', precision: 7, scale: 2)]
+    #[ORM\Column(type: 'integer')]
     #[Assert\GreaterThan(0)]
     private int $salary;
 

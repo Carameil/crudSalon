@@ -12,7 +12,7 @@ class AppFixtures extends Fixture
     {
         $position = new Position();
         $position->setName('testPosition');
-        $position->setSalary(35000);
+        $position->setSalary(2500000);
 
         $manager->persist($position);
         $manager->flush();

@@ -7,7 +7,6 @@ doctrine:
         #server_version: '13'
         types:
             property_id: 'App\Entity\Property\IdType'
-            property_email: 'App\Entity\Property\EmailType'
             property_status: 'App\Entity\Property\StatusType'
             property_unit: 'App\Entity\Property\UnitType'
     orm:

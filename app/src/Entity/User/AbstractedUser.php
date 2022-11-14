@@ -12,7 +12,7 @@ abstract class AbstractedUser
     public const ROLE_EMPLOYEE = 'ROLE_EMPLOYEE';
     public const ROLE_ADMIN = 'ROLE_ADMIN';
 
-    private int $id;
+   // private ?int $id = null;
 
     protected string $firstName;
 
@@ -22,7 +22,7 @@ abstract class AbstractedUser
 
     protected ?string $usernameCanonical = null;
 
-    protected Email $email;
+    protected string $email;
 
     protected ?string $emailCanonical = null;
 
@@ -55,11 +55,6 @@ abstract class AbstractedUser
         $this->plainPassword = null;
     }
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
     public function getFullName(): ?string
     {
         return implode(' ', array_filter([
@@ -75,7 +70,7 @@ abstract class AbstractedUser
     }
 
 
-    public function getEmail(): Email
+    public function getEmail(): string
     {
         return $this->email;
     }
@@ -153,7 +148,7 @@ abstract class AbstractedUser
         $this->usernameCanonical = $usernameCanonical;
     }
 
-    public function setEmail(Email $email): void
+    public function setEmail(string $email): void
     {
         $this->email = $email;
     }

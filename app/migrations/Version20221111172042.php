@@ -39,7 +39,6 @@ final class Version20221111172042 extends AbstractMigration
         $this->addSql('CREATE INDEX IDX_E19D9AD2DD842E46 ON service (position_id)');
         $this->addSql('CREATE TABLE "user" (id INT NOT NULL, first_name VARCHAR(80) NOT NULL, last_name VARCHAR(80) NOT NULL, middle_name VARCHAR(80) DEFAULT NULL, email VARCHAR(180) NOT NULL, status TEXT DEFAULT \'active\' NOT NULL, passwordHash VARCHAR(255) DEFAULT NULL, roles JSON NOT NULL, created_at DATE NOT NULL, updated_at DATE NOT NULL, deleted_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, type VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE UNIQUE INDEX UNIQ_8D93D649E7927C74 ON "user" (email)');
-        $this->addSql('COMMENT ON COLUMN "user".email IS \'(DC2Type:property_email)\'');
         $this->addSql('COMMENT ON COLUMN "user".created_at IS \'(DC2Type:date_immutable)\'');
         $this->addSql('COMMENT ON COLUMN "user".updated_at IS \'(DC2Type:date_immutable)\'');
         $this->addSql('CREATE TABLE visit (id INT NOT NULL, service_id INT NOT NULL, employee_id INT NOT NULL, client_id INT NOT NULL, date TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, PRIMARY KEY(id))');

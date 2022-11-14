@@ -4,7 +4,7 @@ namespace App\Entity\User\Enum;
 
 enum Status: string
 {
-    case STATUS_WAIT = 'wait';
-    case STATUS_ACTIVE = 'active';
-    case STATUS_BLOCKED = 'blocked';
+    public const STATUS_WAIT = 'wait';
+    public const STATUS_ACTIVE = 'active';
+    public const STATUS_BLOCKED = 'blocked';
 }

@@ -20,7 +20,7 @@ class Client extends User
     #[ORM\OneToMany(mappedBy: 'client', targetEntity: Visit::class)]
     private Collection $visits;
 
-    public function __construct(string $firstName, $lastName, Email $email, $middleName = null)
+    public function __construct(string $firstName, $lastName, string $email, $middleName = null)
     {
         parent::__construct($firstName, $lastName, $email, $middleName);
         $this->addRole(self::ROLE_USER);
@@ -30,6 +30,11 @@ class Client extends User
     public function getPhone(): ?string
     {
         return $this->phone;
+    }
+
+    public function getType(): string
+    {
+        return parent::TYPE_CLIENT;
     }
 
     public function setPhone(string $phone): void

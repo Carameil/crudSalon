@@ -4,10 +4,6 @@ namespace App\DataFixtures;
 
 use App\Entity\Client;
 use App\Entity\Employee;
-use App\Entity\Position;
-use App\Entity\Property\Email;
-use App\Entity\Property\Id;
-use App\Entity\Property\Role;
 use App\Entity\User\User;
 use App\Repository\PositionRepository;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
@@ -29,7 +25,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
         $user = $this->createAdminByEmail(
             'admin',
             'admin',
-            new Email('admin@admin.com'),
+            'admin@admin.com',
         );
         $user->setPassword($this->passwordHasher->hashPassword($user, 'admin'));
         $manager->persist($user);
@@ -37,7 +33,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
         $client = $this->createClientByEmail(
             'client',
             'test',
-            new Email('client@client.com'),
+            'client@client.com',
         );
         $client->setPassword($this->passwordHasher->hashPassword($client, 'client'));
         $client->setPhone('89258889966');
@@ -46,7 +42,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
         $employee = $this->createEmployeeByEmail(
             'employee',
             'test',
-            new Email('employee@employee.com'),
+            'employee@employee.com',
         );
         $employee->setPassword($this->passwordHasher->hashPassword($employee, 'employee'));
         $employee->setPhone('89252223355');
@@ -56,11 +52,11 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
         $manager->flush();
     }
 
-    public function createAdminByEmail(string $firstName, string $lastName, Email $email): User {
+    public function createAdminByEmail(string $firstName, string $lastName, string $email): User {
         return $this->createUserByEmail($firstName, $lastName, $email);
     }
 
-    public function createClientByEmail(string $firstName, string $lastName, Email $email): Client {
+    public function createClientByEmail(string $firstName, string $lastName, string $email): Client {
 
         return new Client(
             $firstName,
@@ -69,7 +65,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
         );
     }
 
-    public function createEmployeeByEmail(string $firstName, string $lastName, Email $email): Employee {
+    public function createEmployeeByEmail(string $firstName, string $lastName, string $email): Employee {
 
         return new Employee(
             $firstName,
@@ -78,7 +74,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
         );
     }
 
-    public function createUserByEmail(string $firstName, string $lastName, Email $email): User {
+    public function createUserByEmail(string $firstName, string $lastName, string $email): User {
 
         return User::create(
             $firstName,

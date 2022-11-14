@@ -2,11 +2,9 @@
 
 namespace App\Entity;
 
-use App\Entity\Property\Email;
 use App\Entity\User\User;
 use App\Repository\EmployeeRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: EmployeeRepository::class)]
 class Employee extends User
@@ -22,10 +20,15 @@ class Employee extends User
     #[ORM\ManyToOne(inversedBy: 'employees')]
     private Position $position;
 
-    public function __construct(string $firstName, $lastName, Email $email, $middleName = null)
+    public function __construct(string $firstName, $lastName, string $email, $middleName = null)
     {
         parent::__construct($firstName, $lastName, $email, $middleName);
         $this->addRole(self::ROLE_EMPLOYEE);
+    }
+
+    public function getType(): string
+    {
+        return parent::TYPE_EMPLOYEE;
     }
 
     public function getPhone(): string
