@@ -39,6 +39,7 @@ class ClientCrudController extends AbstractCrudController
             TextField::new('middleName'),
             TextField::new('phone'),
             EmailField::new('email'),
+            TextField::new('status')->onlyOnDetail(),
             TextField::new('password')
                 ->setFormType(PasswordType::class)
                 ->hideOnIndex()

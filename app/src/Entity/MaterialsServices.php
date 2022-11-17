@@ -11,7 +11,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class MaterialsServices
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     #[ORM\Column(type: 'integer')]
     private int $id;
 
@@ -19,7 +19,7 @@ class MaterialsServices
     #[ORM\JoinColumn(name: 'material_id', nullable: false)]
     private Material $material;
 
-    #[ORM\ManyToOne(targetEntity: Service::class)]
+    #[ORM\ManyToOne(targetEntity: Service::class, inversedBy: 'materials')]
     #[ORM\JoinColumn(name: 'service_id', nullable: false)]
     private Service $service;
 
@@ -27,8 +27,8 @@ class MaterialsServices
     #[Assert\GreaterThan(0)]
     private string $quantityMaterial;
 
-    #[ORM\Column(type: "property_unit", length: 5, options: ['default' => Unit::Thing])]
-    private Unit $unit;
+    #[ORM\Column(type: "string", length: 5, options: ['default' => Unit::THING])]
+    private string $unit = Unit::THING;
 
     public function getId(): int
     {
@@ -44,9 +44,9 @@ class MaterialsServices
     }
 
     /**
-     * @return Unit
+     * @return string
      */
-    public function getUnit(): Unit
+    public function getUnit(): string
     {
         return $this->unit;
     }
@@ -60,9 +60,9 @@ class MaterialsServices
     }
 
     /**
-     * @param Unit $unit
+     * @param string $unit
      */
-    public function setUnit(Unit $unit): void
+    public function setUnit(string $unit): void
     {
         $this->unit = $unit;
     }

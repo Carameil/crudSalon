@@ -4,7 +4,9 @@ namespace App\DataFixtures;
 
 use App\Entity\Client;
 use App\Entity\Employee;
+use App\Entity\Service;
 use App\Entity\User\User;
+use App\Entity\Visit;
 use App\Repository\PositionRepository;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
@@ -15,13 +17,13 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
 {
     public function __construct(
         private readonly UserPasswordHasherInterface $passwordHasher,
-        private readonly PositionRepository $positionRepository
+        private readonly PositionRepository          $positionRepository
     )
-    {}
+    {
+    }
 
     public function load(ObjectManager $manager): void
     {
-
         $user = $this->createAdminByEmail(
             'admin',
             'admin',
@@ -49,14 +51,25 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
         $employee->setPosition($this->positionRepository->findOneBy(['name' => 'testPosition']));
         $manager->persist($employee);
 
+        /** @var Service $service */
+        $service = $this->getReference(AppFixtures::SERVICE_REFERENCE);
+        $visit = $this->createVisit(
+            $service,
+            $employee,
+            $client
+        );
+        $manager->persist($visit);
+
         $manager->flush();
     }
 
-    public function createAdminByEmail(string $firstName, string $lastName, string $email): User {
+    public function createAdminByEmail(string $firstName, string $lastName, string $email): User
+    {
         return $this->createUserByEmail($firstName, $lastName, $email);
     }
 
-    public function createClientByEmail(string $firstName, string $lastName, string $email): Client {
+    public function createClientByEmail(string $firstName, string $lastName, string $email): Client
+    {
 
         return new Client(
             $firstName,
@@ -65,7 +78,8 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
         );
     }
 
-    public function createEmployeeByEmail(string $firstName, string $lastName, string $email): Employee {
+    public function createEmployeeByEmail(string $firstName, string $lastName, string $email): Employee
+    {
 
         return new Employee(
             $firstName,
@@ -74,7 +88,8 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
         );
     }
 
-    public function createUserByEmail(string $firstName, string $lastName, string $email): User {
+    public function createUserByEmail(string $firstName, string $lastName, string $email): User
+    {
 
         return User::create(
             $firstName,
@@ -83,7 +98,16 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
         );
     }
 
-    public function getDependencies()
+    public function createVisit(Service $service, Employee $employee, Client $client): Visit
+    {
+        return Visit::create(
+            $service,
+            $employee,
+            $client
+        );
+    }
+
+    public function getDependencies(): array
     {
         return [
             AppFixtures::class,

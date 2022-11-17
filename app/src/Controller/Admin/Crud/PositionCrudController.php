@@ -10,6 +10,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
@@ -34,6 +35,7 @@ class PositionCrudController extends AbstractCrudController
     {
 
         return [
+            IdField::new('id')->hideOnForm(),
             TextField::new('name'),
             \EasyCorp\Bundle\EasyAdminBundle\Field\MoneyField::new('salary')
                 ->setCurrency('RUB')
@@ -43,12 +45,6 @@ class PositionCrudController extends AbstractCrudController
 //                ])
 
         ];
-    }
-
-    public function configureActions(Actions $actions): Actions
-    {
-        return parent::configureActions($actions)
-            ->disable(Action::DETAIL);
     }
 
 }

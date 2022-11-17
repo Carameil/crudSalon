@@ -4,12 +4,17 @@ namespace App\Entity;
 
 use App\Repository\VisitRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 #[ORM\Entity(repositoryClass: VisitRepository::class)]
 class Visit
 {
+    use TimestampableEntity;
+    use SoftDeleteableEntity;
+
     #[ORM\Id]
-    #[ORM\GeneratedValue]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     #[ORM\Column(type: 'integer')]
     private int $id;
 
@@ -25,8 +30,15 @@ class Visit
     #[ORM\JoinColumn(nullable: false)]
     private Client $client;
 
-    #[ORM\Column(type: 'datetime_immutable')]
-    private \DateTimeInterface $date;
+    public static function create(Service $service, Employee $employee, Client $client): self
+    {
+        $visit = new self();
+        $visit->service = $service;
+        $visit->employee = $employee;
+        $visit->client = $client;
+
+        return $visit;
+    }
 
     public function getId(): int
     {

@@ -31,8 +31,8 @@ class Material
     #[Assert\GreaterThan(0)]
     private string $quantity;
 
-    #[ORM\Column(type: "property_unit", length: 5)]
-    private Unit $unit;
+    #[ORM\Column(type: "string", length: 5, options: ['default' => Unit::THING])]
+    private string $unit = Unit::THING;
 
     public function getId(): int
     {
@@ -82,7 +82,7 @@ class Material
     /**
      * @return Unit
      */
-    public function getUnit(): Unit
+    public function getUnit(): string
     {
         return $this->unit;
     }
@@ -128,9 +128,9 @@ class Material
     }
 
     /**
-     * @param Unit $unit
+     * @param string $unit
      */
-    public function setUnit(Unit $unit): void
+    public function setUnit(string $unit): void
     {
         $this->unit = $unit;
     }

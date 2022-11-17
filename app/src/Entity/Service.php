@@ -22,7 +22,7 @@ class Service
     #[ORM\ManyToOne(targetEntity: Position::class, inversedBy: 'services')]
     private Position $position;
 
-    #[ORM\Column(type: 'decimal', precision: 6, scale: 2, options: ['default' => 0])]
+    #[ORM\Column(type: 'integer', options: ['default' => 0])]
     #[Assert\GreaterThan(0)]
     private int $price;
 
@@ -30,7 +30,17 @@ class Service
     private ?string $description = null;
 
     #[ORM\OneToMany(mappedBy: 'service', targetEntity: MaterialsServices::class)]
-    private ?Collection $services = null;
+    private ?Collection $materials = null;
+
+    public static function create(string $name, Position $position, int $price, string $description = null): self {
+        $service = new self();
+        $service->name = $name;
+        $service->position = $position;
+        $service->price = $price;
+        $service->description = $description;
+
+        return $service;
+    }
 
     public function getId(): int
     {
@@ -93,6 +103,28 @@ class Service
     public function setPosition(Position $position): self
     {
         $this->position = $position;
+
+        return $this;
+    }
+
+    public function getMaterialServices(): ?Collection
+    {
+        return $this->materials;
+    }
+
+    public function addMaterialServices(MaterialsServices $materialsServices): self
+    {
+        if (!$this->materials->contains($materialsServices)) {
+            $this->materials->add($materialsServices);
+            $materialsServices->setService($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMaterialServices(MaterialsServices $materialsServices): self
+    {
+        $this->materials->removeElement($materialsServices);
 
         return $this;
     }

@@ -47,6 +47,11 @@ class Position
         return $this->name;
     }
 
+    public function __toString(): string
+    {
+        return $this->getName();  // or some string field in your Vegetal Entity
+    }
+
     /**
      * @return int
      */
