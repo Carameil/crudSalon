@@ -2,9 +2,12 @@
 
 namespace App\Controller\Admin\Crud;
 
+use App\Admin\Filters\FullNameFilter;
+use App\Admin\Filters\TypeFilter;
 use App\Entity\User\Enum\Status;
 use App\Entity\User\User;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Config\KeyValueStore;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
@@ -13,6 +16,8 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\TextFilter;
 use ReflectionClass;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
@@ -72,6 +77,25 @@ class UserCrudController extends AbstractCrudController
         $fields[] = $password;
 
         return $fields;
+    }
+
+    public function configureFilters(Filters $filters, ?bool $fromChild = false): Filters
+    {
+        $filters
+            ->add(ChoiceFilter::new('status')->setChoices([
+                'Ожидает подтверждения' => Status::STATUS_WAIT,
+                'Активный' => Status::STATUS_ACTIVE,
+                'Заблокирован' => Status::STATUS_BLOCKED
+            ]))
+            ->add(TextFilter::new('email'))
+            ->add(FullNameFilter::new('fullName'))
+            ;
+
+        if(!$fromChild) {
+            $filters->add(TypeFilter::new('type'));
+        }
+
+        return $filters;
     }
 
     public function createNewFormBuilder(EntityDto $entityDto, KeyValueStore $formOptions, AdminContext $context): FormBuilderInterface

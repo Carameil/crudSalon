@@ -14,11 +14,13 @@ use Doctrine\ORM\Mapping\DiscriminatorMap;
 use Doctrine\ORM\Mapping\InheritanceType;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
+#[UniqueEntity('email')]
 #[InheritanceType('JOINED')]
 #[DiscriminatorColumn(name: 'type', type: 'string')]
 #[DiscriminatorMap([
@@ -34,7 +36,7 @@ class User extends AbstractedUser implements PasswordAuthenticatedUserInterface,
 
     public const TYPE_CLIENT = 'client';
     public const TYPE_EMPLOYEE = 'employee';
-    private const TYPE_USER = 'user';
+    public const TYPE_USER = 'user';
 
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'AUTO')]

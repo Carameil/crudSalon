@@ -1,0 +1,12 @@
+{% extends '@EasyAdmin/default/new.html.twig' %}
+    {% block form_errors %}
+        {% if errors|length > 0 %}
+            {% for error in errors %}
+                <div class="{{ attr.class|default('') }} invalid-feedback d-block">{{ error.message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endblock form_errors %}
+//{% block _User_email_field_widget %}
+
+
+{% endblock %}

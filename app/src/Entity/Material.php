@@ -47,6 +47,11 @@ class Material
         return $this->name;
     }
 
+    public function __toString(): string
+    {
+        return $this->getName();
+    }
+
     /**
      * @return string
      */

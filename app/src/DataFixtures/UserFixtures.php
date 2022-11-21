@@ -56,7 +56,9 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
         $visit = $this->createVisit(
             $service,
             $employee,
-            $client
+            $client,
+            new \DateTimeImmutable('2022-11-18'),
+            new \DateTimeImmutable('15:00:00')
         );
         $manager->persist($visit);
 
@@ -98,12 +100,20 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
         );
     }
 
-    public function createVisit(Service $service, Employee $employee, Client $client): Visit
+    public function createVisit(
+        Service $service,
+        Employee $employee,
+        Client $client,
+        \DateTimeInterface $date,
+        \DateTimeInterface $time
+    ): Visit
     {
         return Visit::create(
             $service,
             $employee,
-            $client
+            $client,
+            $date,
+            $time
         );
     }
 

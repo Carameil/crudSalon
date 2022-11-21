@@ -5,15 +5,25 @@ namespace App\Controller\Admin\Crud;
 use App\Entity\Client;
 use App\Entity\User\AbstractedUser;
 use App\Entity\User\Enum\Status;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
+use EasyCorp\Bundle\EasyAdminBundle\Config\KeyValueStore;
+use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\TextFilter;
 use ReflectionClass;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-class ClientCrudController extends AbstractCrudController
+class ClientCrudController extends UserCrudController
 {
+
     public static function getEntityFqcn(): string
     {
         return Client::class;
@@ -46,6 +56,11 @@ class ClientCrudController extends AbstractCrudController
                 ->hideOnDetail(),
         ];
 
+    }
+
+    public function configureFilters(Filters $filters, ?bool $fromChild = false): Filters
+    {
+        return parent::configureFilters($filters, true);
     }
 
 }

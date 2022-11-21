@@ -30,12 +30,20 @@ class Visit
     #[ORM\JoinColumn(nullable: false)]
     private Client $client;
 
-    public static function create(Service $service, Employee $employee, Client $client): self
+    #[ORM\Column(type: 'datetime_immutable')]
+    private \DateTimeInterface $date;
+
+    #[ORM\Column(type: 'datetime_immutable')]
+    private \DateTimeInterface $time;
+
+    public static function create(Service $service, Employee $employee, Client $client, \DateTimeInterface $date, \DateTimeInterface $time): self
     {
         $visit = new self();
         $visit->service = $service;
         $visit->employee = $employee;
         $visit->client = $client;
+        $visit->date = $date;
+        $visit->time = $time;
 
         return $visit;
     }
@@ -48,6 +56,11 @@ class Visit
     public function getDate(): \DateTimeInterface
     {
         return $this->date;
+    }
+
+    public function getTime(): \DateTimeInterface
+    {
+        return $this->time;
     }
 
     public function getService(): Service
@@ -89,6 +102,11 @@ class Visit
     public function setDate(\DateTimeInterface $date): void
     {
         $this->date = $date;
+    }
+
+    public function setTime(\DateTimeInterface $time): void
+    {
+        $this->time = $time;
     }
 
 }
