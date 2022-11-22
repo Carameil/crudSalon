@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Property\Enum\ServiceStatus;
 use App\Repository\VisitRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
@@ -35,6 +36,9 @@ class Visit
 
     #[ORM\Column(type: 'datetime_immutable')]
     private \DateTimeInterface $time;
+
+    #[ORM\Column(type: 'string', length: 50, nullable: false, options: ['default' => ServiceStatus::ACTIVE])]
+    private string $serviceStatus = ServiceStatus::ACTIVE;
 
     public static function create(Service $service, Employee $employee, Client $client, \DateTimeInterface $date, \DateTimeInterface $time): self
     {
@@ -107,6 +111,18 @@ class Visit
     public function setTime(\DateTimeInterface $time): void
     {
         $this->time = $time;
+    }
+
+    public function getServiceStatus(): string
+    {
+        return $this->serviceStatus;
+    }
+
+    public function setServiceStatus(string $serviceStatus): self
+    {
+        $this->serviceStatus = $serviceStatus;
+
+        return $this;
     }
 
 }

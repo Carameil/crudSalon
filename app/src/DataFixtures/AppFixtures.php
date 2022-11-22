@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Category;
 use App\Entity\Material;
 use App\Entity\MaterialsServices;
 use App\Entity\Position;
@@ -18,6 +19,11 @@ class AppFixtures extends Fixture
 
     public function load(ObjectManager $manager): void
     {
+        $category = new Category();
+        $category->setName('Маникюр');
+
+        $manager->persist($category);
+
         $position = new Position();
         $position->setName('testPosition');
         $position->setSalary(2500000);
@@ -34,7 +40,8 @@ class AppFixtures extends Fixture
         $manager->persist($material);
 
         $service = Service::create(
-            'Маникюр',
+            'Маникюр универсальный',
+            $category,
             $position,
             250000,
             'qwe'

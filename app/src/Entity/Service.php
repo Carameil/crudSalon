@@ -22,6 +22,10 @@ class Service
     #[ORM\ManyToOne(targetEntity: Position::class, inversedBy: 'services')]
     private Position $position;
 
+    #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'visits')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Category $category = null;
+
     #[ORM\Column(type: 'integer', options: ['default' => 0])]
     #[Assert\GreaterThan(0)]
     private int $price;
@@ -32,9 +36,10 @@ class Service
     #[ORM\OneToMany(mappedBy: 'service', targetEntity: MaterialsServices::class)]
     private ?Collection $materials = null;
 
-    public static function create(string $name, Position $position, int $price, string $description = null): self {
+    public static function create(string $name, Category $category, Position $position, int $price, string $description = null): self {
         $service = new self();
         $service->name = $name;
+        $service->category = $category;
         $service->position = $position;
         $service->price = $price;
         $service->description = $description;
@@ -108,6 +113,19 @@ class Service
     public function setPosition(Position $position): self
     {
         $this->position = $position;
+
+        return $this;
+    }
+
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): self
+    {
+        $this->category = $category;
 
         return $this;
     }
