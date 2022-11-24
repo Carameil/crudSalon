@@ -1,41 +1,44 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
-        {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
-        {% block stylesheets %}
-            {{ encore_entry_link_tags('app') }}
-        {% endblock %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Welcome!{% endblock %}</title>
+    <link rel="icon"
+          href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }}
+    {% endblock %}
 
-        {% block javascripts %}
-            {{ encore_entry_script_tags('app') }}
-        {% endblock %}
-    </head>
+    {% block javascripts %}
+        {{ encore_entry_script_tags('app') }}
+    {% endblock %}
+</head>
 
-    <body>
+<body>
 
-<!-- Navbar -->
-{% include '_nav.html.twig' %}
-<!-- Navbar -->
-
-    <div class="app-body">
-        <div class="sidebar">
-            <nav class="col-md-2 d-none d-md-block bg-light sidebar">
-                {{ knp_menu_render('main') }}
-            </nav>
-        </div>
-        <main class="main">
-            {% block breadcrumbs %}{% endblock %}
-            <div class="container-fluid">
-                {% include '_flashes.html.twig' %}
-                {% block body %}{% endblock %}
+<div class="hero-wrap js-fullheight" style="background-image: url('images/bg_1.jpg');" data-stellar-background-ratio="0.5">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row no-gutters slider-text js-fullheight align-items-center justify-content-center" data-scrollax-parent="true">
+            <div class="col-md-8 ftco-animate text-center" data-scrollax=" properties: { translateY: '70%' }">
+                <div class="icon">
+                    <a href="{{ path('app_home') }}" class="logo">
+                        <span class="flaticon-flower"></span>
+                        <h1>Pretty</h1>
+                    </a>
+                </div>
+                <div>{% block breadcrumbs %} {% endblock %}</div>
+                <h1 class="mb-4" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">Beauty Salon</h1>
+                <p data-scrollax="properties: { translateY: '30%', opacity: 1.6 }"><a href="https://vimeo.com/45830194" class="btn btn-white btn-outline-white px-4 py-3">View Our Services</a></p>
             </div>
-        </main>
+        </div>
     </div>
+</div>
 
-    {% include '_footer.html.twig' %}
+{% block body %}
+{% endblock %}
 
-    </body>
+{% include 'components/_footer.html.twig' %}
+{% include 'components/_loader.html.twig' %}
+</body>
 </html>
