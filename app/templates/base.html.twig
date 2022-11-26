@@ -34,8 +34,13 @@
         </div>
     </div>
 </div>
-
+<div>
+    <!-- Navbar -->
+    {{ render(controller('App\\Controller\\Widget\\WidgetController::navWidget', {currentAction: app.request.get('_route')})) }}
+    <!-- Navbar -->
+</div>
 {% block body %}
+
 {% endblock %}
 
 {% include 'components/_footer.html.twig' %}

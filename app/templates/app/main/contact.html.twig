@@ -6,7 +6,7 @@
 {% block body %}
     <div>
         <!-- Navbar -->
-        {{ render(controller('App\\Controller\\Widget\\WidgetController::navWidget', {breadcrumb: 'contacts'})) }}
+        {{ render(controller('App\\Controller\\Widget\\WidgetController::navWidget', {currentAction: 'app_contact'})) }}
         <!-- Navbar -->
     </div>
     <section class="ftco-section contact-section">

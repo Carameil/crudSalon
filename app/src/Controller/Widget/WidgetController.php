@@ -9,20 +9,20 @@ use Symfony\Component\HttpFoundation\Response;
 class WidgetController extends AbstractController
 {
     public array $routes = [
-        'home' => 'app_home',
-        'works' => 'app_work',
-        'services' => 'app_service',
-        'contacts' => 'app_contact',
-        'about' => 'app_about',
-        'visits' => 'app_visit',
-        'profile' => 'app_profile',
+        'app_home' => 'Home',
+        'app_work' => 'Works',
+        'app_service' => 'Services',
+        'app_contact' => 'Contacts',
+        'app_about' => 'About',
+        'app_visit' => 'Visits',
+//        'app_profile' => 'Profile',
     ];
 
-    public function navWidget(string $breadcrumb): Response
+    public function navWidget(string $currentAction): Response
     {
         return $this->render('components/_nav.html.twig', [
             'routes' => $this->routes,
-            'breadcrumb' => $breadcrumb
+            'currentAction' => $currentAction
         ]);
     }
 }

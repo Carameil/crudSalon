@@ -7,9 +7,9 @@
         </button>
         <div class="collapse navbar-collapse" id="ftco-nav">
             <ul class="navbar-nav ml-auto">
-                {% for key, route in routes %}
-                    <li class="nav-item {% if key is same as(breadcrumb) %}active {% endif %}">
-                        <a href="{{ path(route) }}" class="nav-link">{{ key }}</a>
+                {% for route, lable in routes %}
+                    <li class="nav-item {% if route is same as(currentAction) %}active {% endif %}">
+                        <a href="{{ path(route) }}" class="nav-link">{{ lable }}</a>
                     </li>
                     {#                                <li class="nav-item"><a href="#" class="nav-link"><i class="fa-solid fa-id-card"></i> Profile</a></li> #}
                 {% endfor %}
