@@ -4,11 +4,6 @@
 {% block breadcrumbs %} <p class="breadcrumbs" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }"><span class="mr-2"><a href="{{ path('app_home') }}">Home</a></span> <span>Contact</span></p> {% endblock %}
 
 {% block body %}
-    <div>
-        <!-- Navbar -->
-        {{ render(controller('App\\Controller\\Widget\\WidgetController::navWidget', {currentAction: 'app_contact'})) }}
-        <!-- Navbar -->
-    </div>
     <section class="ftco-section contact-section">
         <div class="container mt-5">
             <div class="row block-9">

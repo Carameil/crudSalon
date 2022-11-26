@@ -34,6 +34,7 @@ logs: ## Show live logs
 
 sh: ## Connect to the PHP FPM container
 	@$(PHP_CONT) bash
+
 stop: ## Stop all containers
 	@$(DOCKER_COMP) stop
 

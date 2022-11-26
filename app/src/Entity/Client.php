@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use App\Entity\Property\Email;
 use App\Entity\User\User;
 use App\Repository\ClientRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -20,9 +19,10 @@ class Client extends User
     #[ORM\OneToMany(mappedBy: 'client', targetEntity: Visit::class)]
     private Collection $visits;
 
-    public function __construct(string $firstName, $lastName, string $email, $middleName = null)
+    public function __construct(string $firstName, $lastName, string $email, string $phone, $middleName = null)
     {
         parent::__construct($firstName, $lastName, $email, $middleName);
+        $this->phone = $phone;
         $this->addRole(self::ROLE_USER);
         $this->visits = new ArrayCollection();
     }

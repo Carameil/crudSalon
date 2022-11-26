@@ -15,6 +15,7 @@ class WidgetController extends AbstractController
         'app_contact' => 'Contacts',
         'app_about' => 'About',
         'app_visit' => 'Visits',
+        'app_logout' => 'Выйти',
 //        'app_profile' => 'Profile',
     ];
 

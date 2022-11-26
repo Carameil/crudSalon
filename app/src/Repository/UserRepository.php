@@ -3,64 +3,68 @@
 namespace App\Repository;
 
 use App\Entity\User\User;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityNotFoundException;
+use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 
-/**
- * @extends ServiceEntityRepository<User>
- *
- * @method User|null find($id, $lockMode = null, $lockVersion = null)
- * @method User|null findOneBy(array $criteria, array $orderBy = null)
- * @method User[]    findAll()
- * @method User[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
- */
-class UserRepository extends ServiceEntityRepository
+class UserRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public EntityRepository $repo;
+
+    public function __construct(
+        private readonly EntityManagerInterface $em,
+    )
     {
-        parent::__construct($registry, User::class);
+        $this->repo = $this->em->getRepository(User::class);
     }
 
-    public function save(User $entity, bool $flush = false): void
+    public function save(User $entity): void
     {
-        $this->getEntityManager()->persist($entity);
+        $this->em->persist($entity);
+    }
 
-        if ($flush) {
-            $this->getEntityManager()->flush();
+    public function remove(User $entity): void
+    {
+        $this->em->remove($entity);
+    }
+
+    /**
+     * @throws EntityNotFoundException
+     */
+    public function get($id): User
+    {
+        /** @var User $user */
+        if (!$user = $this->repo->find($id)) {
+            throw new EntityNotFoundException('Пользователь не найден');
         }
+        return $user;
     }
 
-    public function remove(User $entity, bool $flush = false): void
+    /**
+     * @throws EntityNotFoundException
+     */
+    public function getByEmail(string $email): User
     {
-        $this->getEntityManager()->remove($entity);
-
-        if ($flush) {
-            $this->getEntityManager()->flush();
+        /** @var User $user */
+        if (!$user = $this->repo->findOneBy(['email' => $email])) {
+            throw new EntityNotFoundException('Пользователь не найден');
         }
+
+        return $user;
     }
 
-//    /**
-//     * @return User[] Returns an array of User objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('u')
-//            ->andWhere('u.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('u.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?User
-//    {
-//        return $this->createQueryBuilder('u')
-//            ->andWhere('u.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    /**
+     * @throws NonUniqueResultException
+     * @throws NoResultException
+     */
+    public function hasByEmail(string $email): bool
+    {
+        return $this->repo->createQueryBuilder('t')
+                ->select('COUNT(t.id)')
+                ->andWhere('t.email = :email')
+                ->setParameter(':email', $email)
+                ->getQuery()->getSingleScalarResult() > 0;
+    }
 }

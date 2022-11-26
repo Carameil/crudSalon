@@ -18,7 +18,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-#[ORM\Entity(repositoryClass: UserRepository::class)]
+#[ORM\Entity]
 #[ORM\Table(name: '`user`')]
 #[UniqueEntity('email')]
 #[InheritanceType('JOINED')]
@@ -73,7 +73,7 @@ class User extends AbstractedUser implements PasswordAuthenticatedUserInterface,
         $this->status = Status::STATUS_ACTIVE;
     }
 
-    public static function create(
+    final public static function create(
             string $firstName,
             string $lastName,
             string $email,
