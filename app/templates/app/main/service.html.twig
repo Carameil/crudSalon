@@ -1,9 +1,47 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Услуги{% endblock %}
-{% block breadcrumbs %} <p class="breadcrumbs" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }"><span class="mr-2"><a href="{{ path('app_home') }}">Home</a></span> <span>Services</span></p> {% endblock %}
+{% block breadcrumbs %} <p class="breadcrumbs" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }"><span
+            class="mr-2"><a href="{{ path('app_home') }}">Home</a></span> <span>Services</span></p> {% endblock %}
 
 {% block body %}
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        #myInput {
+            background-image: url('/css/searchicon.png');
+            background-position: 10px 10px;
+            background-repeat: no-repeat;
+            margin-left: 10%;
+            width: 80%;
+            font-size: 16px;
+            padding: 12px 20px 12px 40px;
+            border: 1px solid #ddd;
+            margin-bottom: 12px;
+        }
+
+        #services {
+            border-collapse: collapse;
+            width: 80%;
+            border: 1px solid #ddd;
+            font-size: 18px;
+        }
+
+        #services th, #services td {
+            text-align: left;
+            padding: 12px;
+        }
+
+        #services tr {
+            border-bottom: 1px solid #ddd;
+        }
+
+        #services tr.header, #services tr:hover {
+            background-color: #f1f1f1;
+        }
+    </style>
     <section class="ftco-section">
         <div class="container">
             <div class="row">
@@ -12,7 +50,8 @@
                         <div class="icon d-flex mb-3"><span class="flaticon-facial-treatment"></span></div>
                         <div class="media-body">
                             <h3 class="heading">Skin &amp; Beauty Care</h3>
-                            <p>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic.</p>
+                            <p>Even the all-powerful Pointing has no control about the blind texts it is an almost
+                                unorthographic.</p>
                         </div>
                     </div>
                 </div>
@@ -21,7 +60,8 @@
                         <div class="icon d-flex mb-3"><span class="flaticon-cosmetics"></span></div>
                         <div class="media-body">
                             <h3 class="heading">Makeup Pro</h3>
-                            <p>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic.</p>
+                            <p>Even the all-powerful Pointing has no control about the blind texts it is an almost
+                                unorthographic.</p>
                         </div>
                     </div>
                 </div>
@@ -30,7 +70,8 @@
                         <div class="icon d-flex mb-3"><span class="flaticon-curl"></span></div>
                         <div class="media-body">
                             <h3 class="heading">Hair Style</h3>
-                            <p>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic.</p>
+                            <p>Even the all-powerful Pointing has no control about the blind texts it is an almost
+                                unorthographic.</p>
                         </div>
                     </div>
                 </div>
@@ -46,8 +87,11 @@
                 <div class="col-md-5 discount ftco-animate">
                     <h3>Save up to 25% Off</h3>
                     <h2 class="mb-4">Student Discount</h2>
-                    <p class="mb-4">Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line of blind text by the name of Lorem Ipsum decided to leave for the far World of Grammar.</p>
-                    <p><a href="{{ path('app_home') }}#booking" class="btn btn-white btn-outline-white px-4 py-3">Book Now</a></p>
+                    <p class="mb-4">Even the all-powerful Pointing has no control about the blind texts it is an almost
+                        unorthographic life One day however a small line of blind text by the name of Lorem Ipsum
+                        decided to leave for the far World of Grammar.</p>
+                    <p><a href="{{ path('app_home') }}#booking" class="btn btn-white btn-outline-white px-4 py-3">Book
+                            Now</a></p>
                 </div>
             </div>
         </div>
@@ -100,4 +144,84 @@
             </div>
         </div>
     </section>
+
+    <h2 align="center">Наши услуги</h2>
+
+    <input type="text" id="myInput" onkeyup="searchByName()" placeholder="Search for names.." title="Type in a name">
+
+    <select name="category" id="categoriesDropdown">
+        <option value=""></option>
+        {% for category in categories %}
+            <option value="{{ category.id }}">{{ category.name }}</option>
+        {% endfor %}
+    </select>
+
+    <div class="tableContainer">
+        <table align="center" id="services">
+            <tr class="header">
+                <th style="width:30%;">Название</th>
+                <th style="width:50%;">Описание</th>
+                <th style="width:10%;">Цена</th>
+                <th style="width:10%;"></th>
+            </tr>
+            {% for service in services %}
+                <tr>
+                    <td>{{ service.name }}</td>
+                    <td>{{ service.description }}</td>
+                    <td>{{ price(service.price) }}</td>
+                    <td>
+                        <button type="button" class="btn btn-primary">Записаться</button>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.1.js"
+            integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI=" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            console.log("jQuery is ready");
+            $(document).on("change", "#categoriesDropdown", function (event) {
+                event.preventDefault();
+                var value = $(this).val();
+                console.log("Category is changed");
+                $.ajax({
+                    url: '{{ (path('app_service_by_category')) }}',
+                    type: "POST",
+                    data: {
+                        "categoryId": value
+                    },
+                    success: function (data) {
+                        console.log(data);
+                        $('.tableContainer').html(data);
+                    },
+                    error: function (err, data) {
+                        console.log(err.statusText);
+                    }
+                });
+
+                return false;
+            })
+        });
+
+        function searchByName() {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("myInput");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("services");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[0];
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    </script>
 {% endblock %}

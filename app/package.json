@@ -25,6 +25,7 @@
     },
     "dependencies": {
         "jquery": "^3.6.1",
+        "mdb-ui-kit": "^6.0.1",
         "scrollax": "^1.0.0"
     }
 }

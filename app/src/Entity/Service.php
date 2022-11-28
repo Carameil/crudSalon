@@ -5,10 +5,12 @@ namespace App\Entity;
 use App\Repository\ServiceRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
-#[ORM\Entity(repositoryClass: ServiceRepository::class)]
+#[ORM\Entity()]
+#[UniqueEntity('name')]
 class Service
 {
     #[ORM\Id]
@@ -22,7 +24,7 @@ class Service
     #[ORM\ManyToOne(targetEntity: Position::class, inversedBy: 'services')]
     private Position $position;
 
-    #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'visits')]
+    #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'services')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Category $category = null;
 

@@ -3,64 +3,40 @@
 namespace App\Repository;
 
 use App\Entity\Service;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityNotFoundException;
+use Doctrine\ORM\EntityRepository;
 
-/**
- * @extends ServiceEntityRepository<Service>
- *
- * @method Service|null find($id, $lockMode = null, $lockVersion = null)
- * @method Service|null findOneBy(array $criteria, array $orderBy = null)
- * @method Service[]    findAll()
- * @method Service[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
- */
-class ServiceRepository extends ServiceEntityRepository
+class ServiceRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public EntityRepository $repo;
+
+    public function __construct(
+        private readonly EntityManagerInterface $em,
+    )
     {
-        parent::__construct($registry, Service::class);
+        $this->repo = $this->em->getRepository(Service::class);
     }
 
-    public function save(Service $entity, bool $flush = false): void
+    public function save(Service $entity): void
     {
-        $this->getEntityManager()->persist($entity);
+        $this->em->persist($entity);
+    }
 
-        if ($flush) {
-            $this->getEntityManager()->flush();
+    public function remove(Service $entity): void
+    {
+        $this->em->remove($entity);
+    }
+
+    /**
+     * @throws EntityNotFoundException
+     */
+    public function get(int $id): Service
+    {
+        /** @var Service $user */
+        if (!$user = $this->repo->find($id)) {
+            throw new EntityNotFoundException('Услуга не найдена');
         }
+        return $user;
     }
-
-    public function remove(Service $entity, bool $flush = false): void
-    {
-        $this->getEntityManager()->remove($entity);
-
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
-    }
-
-//    /**
-//     * @return Service[] Returns an array of Service objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('s')
-//            ->andWhere('s.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('s.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?Service
-//    {
-//        return $this->createQueryBuilder('s')
-//            ->andWhere('s.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
 }

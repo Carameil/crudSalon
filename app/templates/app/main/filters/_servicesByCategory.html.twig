@@ -1,0 +1,18 @@
+<table align="center" id="myTable">
+    <tr class="header">
+        <th style="width:30%;">Название</th>
+        <th style="width:50%;">Описание</th>
+        <th style="width:10%;">Цена</th>
+        <th style="width:10%;"></th>
+    </tr>
+    {% for service in services %}
+        <tr>
+            <td>{{ service.name }}</td>
+            <td>{{ service.description }}</td>
+            <td>{{ price(service.price) }}</td>
+            <td>
+                <button type="button" class="btn btn-primary">Записаться</button>
+            </td>
+        </tr>
+    {% endfor %}
+</table>
