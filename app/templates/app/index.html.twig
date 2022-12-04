@@ -402,7 +402,7 @@
     </section>
 
     <div><a id="booking"></a></div>
-
+    {% include "components/_flashes.html.twig" %}
     <section class="ftco-section ftco-appointment">
         <div class="overlay"></div>
         <div class="container">
@@ -425,27 +425,13 @@
                         </div>
                     </div>
                 </div>
-                {% include "components/_flashes.html.twig" %}
                 <div class="col-md-6 appointment pl-md-5 ftco-animate">
                     <h3 class="mb-3">Appointments</h3>
-                    <form action="#" class="appointment-form">
-                        <div class="row form-group d-flex">
-                            <div class="col-md-6">
-                                <input type="text" class="form-control" placeholder="First Name">
-                            </div>
-                            <div class="col-md-6">
-                                <input type="text" class="form-control" placeholder="Last Name">
-                            </div>
-                        </div>
-                        <div class="row form-group d-flex">
-                            <div class="col-md-6">
-                                <input type="text" class="form-control" placeholder="Phone">
-                            </div>
-                        </div>
+                    <form action="{{ path('app_appointment') }}" method="POST" class="appointment-form">
                         <div class="row form-group d-flex">
                             <div class="col-md-6">
                                 <div class="categoryContainer">
-                                    <select class="form-control" name="category" id="categoriesDropdown">
+                                    <select class="form-control" id="categoriesDropdown">
                                         {% if (bookCategory) %}
                                             <option value="{{ bookCategory[0].id }}" disabled
                                                     selected>{{ bookCategory[0].name }}</option>
@@ -463,7 +449,7 @@
                             <div class="col-md-6">
                                 <div class="servicesContainer">
                                     {% if (bookService) %}
-                                        <select class="form-control" name="services" id="servicesDropdown">
+                                        <select class="form-control" name="serviceId" id="servicesDropdown">
                                             {% if (bookService) %}
                                                 <option value="{{ bookService[0].id }}" disabled
                                                         selected>{{ bookService[0].name }}</option>
@@ -482,7 +468,7 @@
                             <div class="col-md-6">
                                 <div class="employeesContainer">
                                     {% if (employeesByBookService) %}
-                                        <select class="form-control" name="employees" id="employeesDropdown">
+                                        <select class="form-control" name="employeeId" id="employeesDropdown">
                                             <option value=""> Выберите мастера</option>
                                             {% for employee in employeesByBookService %}
                                                 <option style="color: black"
@@ -498,20 +484,20 @@
                             <div class="col-md-6">
                                 <div class="input-wrap">
                                     <div class="icon"><span class="ion-md-calendar"></span></div>
-                                    <input type="text" id="appointment_date" class="form-control"
+                                    <input type="text" name="date" id="appointment_date" class="form-control"
                                            placeholder="Date" disabled>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="input-wrap">
                                     <div class="icon"><span class="ion-md-calendar"></span></div>
-                                    <input type="text" id="appointment_time" class="form-control"
+                                    <input type="text" name="time" id="appointment_time" class="form-control"
                                            placeholder="Time" disabled>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group">
-                            <input type="submit" value="Order" class="btn btn-white btn-outline-white py-3 px-4">
+                            <input type="submit" value="Записаться" class="btn btn-white btn-outline-white py-3 px-4">
                         </div>
                     </form>
                 </div>

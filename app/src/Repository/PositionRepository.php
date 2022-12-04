@@ -3,64 +3,40 @@
 namespace App\Repository;
 
 use App\Entity\Position;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityNotFoundException;
+use EasyCorp\Bundle\EasyAdminBundle\Orm\EntityRepository;
 
-/**
- * @extends ServiceEntityRepository<Position>
- *
- * @method Position|null find($id, $lockMode = null, $lockVersion = null)
- * @method Position|null findOneBy(array $criteria, array $orderBy = null)
- * @method Position[]    findAll()
- * @method Position[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
- */
-class PositionRepository extends ServiceEntityRepository
+class PositionRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public EntityRepository $repo;
+
+    public function __construct(
+        private readonly EntityManagerInterface $em,
+    )
     {
-        parent::__construct($registry, Position::class);
+        $this->repo = $this->em->getRepository(Position::class);
     }
 
-    public function save(Position $entity, bool $flush = false): void
+    public function save(Position $entity): void
     {
-        $this->getEntityManager()->persist($entity);
+        $this->em->persist($entity);
+    }
 
-        if ($flush) {
-            $this->getEntityManager()->flush();
+    public function remove(Position $entity): void
+    {
+        $this->em->remove($entity);
+    }
+
+    /**
+     * @throws EntityNotFoundException
+     */
+    public function get(int $id): Position
+    {
+        /** @var Position $position */
+        if (!$position = $this->repo->find($id)) {
+            throw new EntityNotFoundException('Должность не найдена');
         }
+        return $position;
     }
-
-    public function remove(Position $entity, bool $flush = false): void
-    {
-        $this->getEntityManager()->remove($entity);
-
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
-    }
-
-//    /**
-//     * @return Position[] Returns an array of Position objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('p')
-//            ->andWhere('p.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('p.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?Position
-//    {
-//        return $this->createQueryBuilder('p')
-//            ->andWhere('p.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
 }

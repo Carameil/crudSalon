@@ -6,7 +6,7 @@ use App\Entity\User\User;
 use App\Repository\EmployeeRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: EmployeeRepository::class)]
+#[ORM\Entity]
 class Employee extends User
 {
     public const TYPE = 'employee';

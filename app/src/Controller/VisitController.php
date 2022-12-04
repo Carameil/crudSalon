@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\User\User;
 use App\ReadModel\CategoryFetcher;
 use App\ReadModel\ServiceFetcher;
+use App\UseCase\Visit\Create;
 use Doctrine\DBAL\Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -37,6 +39,40 @@ class VisitController extends AbstractController
         return $this->redirect($this->generateUrl('app_home', [
             '_fragment' => 'booking',
             'serviceId' => $serviceId,
+        ]));
+    }
+
+    /**
+     * @throws Exception
+     */
+    #[Route('/appointment', name: 'app_appointment', methods: ['POST'])]
+    public function actionPost(Request $request, Create\Handler $handler): Response
+    {
+        $data = $request->request->all();
+        /** @var User $currentClient */
+        $currentClient = $this->getUser();
+        $command = new Create\Command($currentClient->getId());
+
+        $form = $this->createForm(Create\Form::class, $command, [
+            'csrf_protection' => false,
+        ]);
+
+        $form->submit($data);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            try {
+                $handler->handle($command);
+                $this->addFlash('success', 'Вы успешно записаны');
+                return $this->redirect($this->generateUrl('app_home', [
+                    '_fragment' => 'booking',
+                ]));
+            } catch (\Exception $e) {
+                $this->addFlash('error', $e->getMessage());
+            }
+        }
+
+        return $this->redirect($this->generateUrl('app_booking', [
+            'serviceId' => $data['serviceId'],
         ]));
     }
 }

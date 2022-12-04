@@ -33,10 +33,10 @@ class ServiceRepository
      */
     public function get(int $id): Service
     {
-        /** @var Service $user */
-        if (!$user = $this->repo->find($id)) {
+        /** @var Service $service */
+        if (!$service = $this->repo->find($id)) {
             throw new EntityNotFoundException('Услуга не найдена');
         }
-        return $user;
+        return $service;
     }
 }

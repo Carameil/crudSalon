@@ -3,12 +3,14 @@
 namespace App\Entity;
 
 use App\Entity\Property\Enum\ServiceStatus;
-use App\Repository\VisitRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
-#[ORM\Entity(repositoryClass: VisitRepository::class)]
+#[ORM\Entity]
+#[UniqueEntity(fields: ['date', 'time'], message: 'Данная запись уже существует')]
+#[ORM\UniqueConstraint(name: 'date_time_ui', columns: ['date', 'time'])]
 class Visit
 {
     use TimestampableEntity;

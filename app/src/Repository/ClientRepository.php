@@ -3,64 +3,40 @@
 namespace App\Repository;
 
 use App\Entity\Client;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityNotFoundException;
+use Doctrine\ORM\EntityRepository;
 
-/**
- * @extends ServiceEntityRepository<Client>
- *
- * @method Client|null find($id, $lockMode = null, $lockVersion = null)
- * @method Client|null findOneBy(array $criteria, array $orderBy = null)
- * @method Client[]    findAll()
- * @method Client[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
- */
-class ClientRepository extends ServiceEntityRepository
+class ClientRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public EntityRepository $repo;
+
+    public function __construct(
+        private readonly EntityManagerInterface $em,
+    )
     {
-        parent::__construct($registry, Client::class);
+        $this->repo = $this->em->getRepository(Client::class);
     }
 
-    public function save(Client $entity, bool $flush = false): void
+    public function save(Client $entity): void
     {
-        $this->getEntityManager()->persist($entity);
+        $this->em->persist($entity);
+    }
 
-        if ($flush) {
-            $this->getEntityManager()->flush();
+    public function remove(Client $entity): void
+    {
+        $this->em->remove($entity);
+    }
+
+    /**
+     * @throws EntityNotFoundException
+     */
+    public function get($id): Client
+    {
+        /** @var Client $client */
+        if (!$client = $this->repo->find($id)) {
+            throw new EntityNotFoundException('Клиент не найден');
         }
+        return $client;
     }
-
-    public function remove(Client $entity, bool $flush = false): void
-    {
-        $this->getEntityManager()->remove($entity);
-
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
-    }
-
-//    /**
-//     * @return Client[] Returns an array of Client objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('c.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?Client
-//    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
 }
