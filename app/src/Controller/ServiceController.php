@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class ServiceController extends AbstractController
 {
     public function __construct(
-        private readonly ServiceFetcher $serviceFetcher,
+        private readonly ServiceFetcher  $serviceFetcher,
         private readonly CategoryFetcher $categoryFetcher,
     )
     {
@@ -39,11 +39,11 @@ class ServiceController extends AbstractController
      * @throws Exception
      */
     #[Route('/services/listByCategory', name: 'app_service_by_category')]
-    public function getList(Request $request): Response
+    public function getListByCategoryId(Request $request): Response
     {
         $categoryId = $request->request->get('categoryId');
 
-        if($categoryId) {
+        if ($categoryId) {
             $services = $this->serviceFetcher->findAllByCategoryId($categoryId);
         } else {
             $services = $this->serviceFetcher->findAll();
@@ -51,6 +51,24 @@ class ServiceController extends AbstractController
 
         return $this->render('app/main/filters/_servicesByCategory.html.twig', [
             'services' => $services,
+        ]);
+    }
+
+    /**
+     * @throws Exception
+     */
+    #[Route('/services/selectorByCategory/{bookServiceId}', name: 'app_services_selector_by_category')]
+    public function getSelectorByCategory(Request $request, ?int $bookServiceId = null): Response
+    {
+        $categoryId = $request->request->get('categoryId');
+
+        $services = $this->serviceFetcher->findAllByCategoryId((int)$categoryId);
+
+        $bookServiceId ? $bookService = $this->serviceFetcher->getById($bookServiceId) : $bookService = null;
+
+        return $this->render('app/main/filters/_servicesSelectorByCategory.html.twig', [
+            'services' => $services,
+            'bookService' => $bookService
         ]);
     }
 }

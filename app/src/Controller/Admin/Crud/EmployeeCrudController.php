@@ -5,6 +5,7 @@ namespace App\Controller\Admin\Crud;
 use App\Entity\Employee;
 use App\Entity\User\AbstractedUser;
 use App\Entity\User\Enum\Status;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Config\KeyValueStore;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
@@ -19,6 +20,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\EntityFilter;
 use ReflectionClass;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -43,7 +45,7 @@ class EmployeeCrudController extends UserCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        return [
+        $fields = [
             IdField::new('id')->hideOnForm(),
             TextField::new('firstName'),
             TextField::new('lastName'),
@@ -53,11 +55,22 @@ class EmployeeCrudController extends UserCrudController
             TelephoneField::new('phone'),
             TextField::new('status')->onlyOnDetail(),
             EmailField::new('email'),
-            TextField::new('password')
-                ->setFormType(PasswordType::class)
-                ->hideOnIndex()
-                ->hideOnDetail(),
         ];
+
+        $password = TextField::new('password')
+            ->setFormType(RepeatedType::class)
+            ->setFormTypeOptions([
+                'type' => PasswordType::class,
+                'first_options' => ['label' => 'Password'],
+                'second_options' => ['label' => '(Repeat)'],
+                'mapped' => false,
+            ])
+            ->setRequired($pageName === Crud::PAGE_NEW)
+            ->onlyOnForms();
+
+        $fields[] = $password;
+
+        return $fields;
     }
 
     public function configureFilters(Filters $filters, ?bool $fromChild = false): Filters

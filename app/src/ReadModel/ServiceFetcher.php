@@ -18,6 +18,7 @@ class ServiceFetcher
     {
         $stmt = $this->connection->createQueryBuilder()
             ->select([
+                's.id',
                 's.name',
                 's.description',
                 's.price',
@@ -37,6 +38,7 @@ class ServiceFetcher
     {
         $stmt = $this->connection->createQueryBuilder()
             ->select([
+                's.id',
                 's.name',
                 's.description',
                 's.price',
@@ -50,5 +52,23 @@ class ServiceFetcher
 
         return $stmt->fetchAllAssociative();
 
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function getById(int $serviceId): array
+    {
+        $stmt = $this->connection->createQueryBuilder()
+            ->select([
+                's.id',
+                's.name'
+            ])
+            ->from('service', 's')
+            ->where('id = :id')
+            ->orderBy('s.name')
+            ->setParameter('id', $serviceId);
+
+        return $stmt->fetchAllAssociative();
     }
 }

@@ -36,18 +36,18 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
             'client',
             'test',
             'client@client.com',
+            '89258889966'
         );
         $client->setPassword($this->passwordHasher->hashPassword($client, 'client'));
-        $client->setPhone('89258889966');
         $manager->persist($client);
 
         $employee = $this->createEmployeeByEmail(
             'employee',
             'test',
             'employee@employee.com',
+            '89252223355'
         );
         $employee->setPassword($this->passwordHasher->hashPassword($employee, 'employee'));
-        $employee->setPhone('89252223355');
         $employee->setPosition($this->positionRepository->findOneBy(['name' => 'testPosition']));
         $manager->persist($employee);
 
@@ -70,23 +70,25 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
         return $this->createUserByEmail($firstName, $lastName, $email);
     }
 
-    public function createClientByEmail(string $firstName, string $lastName, string $email): Client
+    public function createClientByEmail(string $firstName, string $lastName, string $email, string $phone): Client
     {
 
         return new Client(
             $firstName,
             $lastName,
-            $email
+            $email,
+            $phone
         );
     }
 
-    public function createEmployeeByEmail(string $firstName, string $lastName, string $email): Employee
+    public function createEmployeeByEmail(string $firstName, string $lastName, string $email, string $phone): Employee
     {
 
         return new Employee(
             $firstName,
             $lastName,
-            $email
+            $email,
+            $phone
         );
     }
 

@@ -170,7 +170,9 @@
                     <td>{{ service.description }}</td>
                     <td>{{ price(service.price) }}</td>
                     <td>
-                        <button type="button" class="btn btn-primary">Записаться</button>
+                        <a href="{{ path('app_booking', {'serviceId' : service.id}) }}">
+                            <button type="button" class="btn btn-primary">Записаться</button>
+                        </a>
                     </td>
                 </tr>
             {% endfor %}
@@ -187,7 +189,7 @@
                 var value = $(this).val();
                 console.log("Category is changed");
                 $.ajax({
-                    url: '{{ (path('app_service_by_category')) }}',
+                    url: '{{ (path('app_service_by_category', {'case' : 'list'})) }}',
                     type: "POST",
                     data: {
                         "categoryId": value
@@ -196,7 +198,7 @@
                         console.log(data);
                         $('.tableContainer').html(data);
                     },
-                    error: function (err, data) {
+                    error: function (err) {
                         console.log(err.statusText);
                     }
                 });

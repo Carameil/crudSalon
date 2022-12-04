@@ -1,0 +1,11 @@
+<select class="form-control" name="services" id="servicesDropdown">
+    {% if (bookService) %}
+        <option value="{{ bookService[0].id }}" disabled selected>{{ bookService[0].name }}</option>
+    {% else %}
+        <option value="" disabled selected>Выберите категорию услуг</option>
+    {% endif %}
+    {% for service in services %}
+        <option style="color: black"
+                value="{{ service.id }}">{{ service.name }}</option>
+    {% endfor %}
+</select>

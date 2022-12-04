@@ -71,8 +71,7 @@ class UserCrudController extends AbstractCrudController
                 'mapped' => false,
             ])
             ->setRequired($pageName === Crud::PAGE_NEW)
-            ->onlyOnForms()
-        ;
+            ->onlyOnForms();
 
         $fields[] = $password;
 

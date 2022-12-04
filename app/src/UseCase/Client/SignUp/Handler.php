@@ -32,15 +32,16 @@ class Handler
             throw new \DomainException('Пользователь с таким email существует');
         }
 
-        $user = new Client(
+        $client = new Client(
             $command->firstName,
             $command->lastName,
             $email,
+            $command->phone,
             $command->middleName
         );
-        $user->setPassword($this->hasher->hashPassword($user, $command->plainPassword),);
+        $client->setPassword($this->hasher->hashPassword($client, $command->plainPassword));
 
-        $this->users->save($user);
+        $this->users->save($client);
 
         $this->flusher->flush();
     }

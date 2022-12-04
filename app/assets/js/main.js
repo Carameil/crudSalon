@@ -278,15 +278,16 @@
   });
 
 
-  $('#appointment_date').datepicker({
-	  'format': 'm/d/yyyy',
+    $('#appointment_date').datepicker({
+	  'format': 'yyyy-mm-dd',
 	  'autoclose': true
 	});
 
-	$('#appointment_time').timepicker();
 
-
-
+	$('#appointment_time').timepicker({
+		'showMeridian': false,
+		'timeFormat': 'H:i',
+	});
 
 })(jQuery);
 

@@ -23,4 +23,23 @@ class CategoryFetcher
 
         return $stmt->fetchAllAssociative();
     }
+
+    /**
+     * @throws Exception
+     */
+    public function getByServiceId(int $serviceId): array
+    {
+        $stmt = $this->connection->createQueryBuilder()
+            ->select([
+                'ctg.id',
+                'ctg.name'
+            ])
+            ->from('category', 'ctg')
+            ->innerJoin('ctg', '"service"', 's', 's.category_id = ctg.id')
+            ->where('s.id = :serviceId')
+            ->orderBy('ctg.name')
+            ->setParameter('serviceId', $serviceId);
+
+        return $stmt->fetchAllAssociative();
+    }
 }

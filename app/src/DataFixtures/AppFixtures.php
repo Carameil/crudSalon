@@ -44,6 +44,7 @@ class AppFixtures extends Fixture
             $category,
             $position,
             250000,
+            30,
             'qwe'
         );
 

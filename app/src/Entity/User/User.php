@@ -4,10 +4,8 @@ namespace App\Entity\User;
 
 use App\Entity\Client;
 use App\Entity\Employee;
-use App\Entity\Property\Email;
 use App\Entity\User\Enum\Status;
 use App\Entity\User\Enum\Subordinate;
-use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\DiscriminatorColumn;
 use Doctrine\ORM\Mapping\DiscriminatorMap;

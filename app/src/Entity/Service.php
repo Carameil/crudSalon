@@ -35,16 +35,20 @@ class Service
     #[ORM\Column(type: 'text')]
     private ?string $description = null;
 
+    #[ORM\Column(type: 'integer')]
+    private ?string $avgTime = null;
+
     #[ORM\OneToMany(mappedBy: 'service', targetEntity: MaterialsServices::class)]
     private ?Collection $materials = null;
 
-    public static function create(string $name, Category $category, Position $position, int $price, string $description = null): self {
+    public static function create(string $name, Category $category, Position $position, int $price, int $avgTime, string $description = null): self {
         $service = new self();
         $service->name = $name;
         $service->category = $category;
         $service->position = $position;
         $service->price = $price;
         $service->description = $description;
+        $service->avgTime = $avgTime;
 
         return $service;
     }
@@ -73,6 +77,14 @@ class Service
     public function getPrice(): int
     {
         return $this->price;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAvgTime(): string
+    {
+        return $this->avgTime;
     }
 
     /**
@@ -130,6 +142,14 @@ class Service
         $this->category = $category;
 
         return $this;
+    }
+
+    /**
+     * @param string $avgTime
+     */
+    public function setAvgTime(string $avgTime): void
+    {
+        $this->avgTime = $avgTime;
     }
 
     public function getMaterialServices(): ?Collection

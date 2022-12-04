@@ -1,0 +1,7 @@
+<select class="form-control" name="employees" id="employeesDropdown">
+    <option value=""> Выберите мастера</option>
+    {% for employee in employees %}
+        <option style="color: black"
+                value="{{ employee.id }}">{{ employee.fullname }}</option>
+    {% endfor %}
+</select>
