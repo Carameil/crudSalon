@@ -7,10 +7,8 @@ use App\ReadModel\EmployeeFetcher;
 use App\ReadModel\ServiceFetcher;
 use Doctrine\DBAL\Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use function Symfony\Component\Translation\t;
 
 class HomeController extends AbstractController
 {

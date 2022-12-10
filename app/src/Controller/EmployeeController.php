@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\ReadModel\EmployeeFetcher;
 use App\ReadModel\ServiceFetcher;
-use App\ReadModel\VisitFetcher;
+use App\ReadModel\Visit\VisitFetcher;
 use Doctrine\DBAL\Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;

@@ -57,6 +57,25 @@ class ServiceFetcher
     /**
      * @throws Exception
      */
+    public function findAllByEmployeeId(int $employeeId): array
+    {
+        $stmt = $this->connection->createQueryBuilder()
+            ->select([
+                's.id',
+                's.name',
+            ])
+            ->from('service', 's')
+            ->innerJoin('s', 'employee', 'e', 'e.position_id = s.position_id')
+            ->where('e.id = :employeeId')
+            ->orderBy('s.name')
+            ->setParameter('employeeId', $employeeId);
+
+        return $stmt->fetchAllAssociative();
+    }
+
+    /**
+     * @throws Exception
+     */
     public function getById(int $serviceId): array
     {
         $stmt = $this->connection->createQueryBuilder()

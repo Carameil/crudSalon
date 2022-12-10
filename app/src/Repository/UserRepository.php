@@ -8,8 +8,10 @@ use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
+use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
-class UserRepository
+class UserRepository implements UserLoaderInterface
 {
     public EntityRepository $repo;
 
@@ -66,5 +68,19 @@ class UserRepository
                 ->andWhere('t.email = :email')
                 ->setParameter(':email', $email)
                 ->getQuery()->getSingleScalarResult() > 0;
+    }
+
+    /**
+     * @throws NonUniqueResultException
+     */
+    public function loadUserByIdentifier(string $identifier): ?UserInterface
+    {
+        return $this->em->createQuery(
+            'SELECT u
+                FROM App\Entity\User\User u
+                WHERE u.email = :query'
+        )
+            ->setParameter('query', $identifier)
+            ->getOneOrNullResult();
     }
 }

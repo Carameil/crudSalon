@@ -29,7 +29,7 @@ final class Version20221117180242 extends AbstractMigration
         $this->addSql('ALTER TABLE visit ADD created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL');
         $this->addSql('ALTER TABLE visit ADD updated_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL');
         $this->addSql('ALTER TABLE visit ADD deleted_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL');
-        $this->addSql('ALTER TABLE visit DROP date');
+        $this->addSql('ALTER TABLE visit DROP date_time');
     }
 
     public function down(Schema $schema): void
@@ -42,11 +42,11 @@ final class Version20221117180242 extends AbstractMigration
         $this->addSql('COMMENT ON COLUMN "user".updated_at IS \'(DC2Type:date_immutable)\'');
         $this->addSql('ALTER TABLE material ALTER unit TYPE TEXT');
         $this->addSql('ALTER TABLE material ALTER unit TYPE TEXT');
-        $this->addSql('ALTER TABLE visit ADD date TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL');
+        $this->addSql('ALTER TABLE visit ADD date_time TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL');
         $this->addSql('ALTER TABLE visit DROP created_at');
         $this->addSql('ALTER TABLE visit DROP updated_at');
         $this->addSql('ALTER TABLE visit DROP deleted_at');
-        $this->addSql('COMMENT ON COLUMN visit.date IS \'(DC2Type:datetime_immutable)\'');
+        $this->addSql('COMMENT ON COLUMN visit.date_time IS \'(DC2Type:datetime_immutable)\'');
         $this->addSql('ALTER TABLE position ALTER salary TYPE NUMERIC(7, 2)');
     }
 }

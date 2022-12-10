@@ -12,8 +12,6 @@ abstract class AbstractedUser
     public const ROLE_EMPLOYEE = 'ROLE_EMPLOYEE';
     public const ROLE_ADMIN = 'ROLE_ADMIN';
 
-   // private ?int $id = null;
-
     protected string $firstName;
 
     protected string $lastName;
@@ -39,6 +37,20 @@ abstract class AbstractedUser
     public function __toString(): string
     {
         return $this->getFullName();
+    }
+
+    public function serialize()
+    {
+        return serialize([
+            $this->email,
+        ]);
+    }
+
+    public function unserialize($data)
+    {
+        list(
+            $this->email,
+            ) = unserialize($data);
     }
 
     public function addRole(string $role): void

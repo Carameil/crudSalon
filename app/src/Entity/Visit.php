@@ -9,8 +9,8 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity]
-#[UniqueEntity(fields: ['date', 'time'], message: 'Данная запись уже существует')]
-#[ORM\UniqueConstraint(name: 'date_time_ui', columns: ['date', 'time'])]
+#[UniqueEntity(fields: ['date'], message: 'Данная запись уже существует')]
+#[ORM\UniqueConstraint(name: 'date_time_ui', columns: ['date_time'])]
 class Visit
 {
     use TimestampableEntity;
@@ -34,22 +34,18 @@ class Visit
     private Client $client;
 
     #[ORM\Column(type: 'datetime_immutable')]
-    private \DateTimeInterface $date;
-
-    #[ORM\Column(type: 'datetime_immutable')]
-    private \DateTimeInterface $time;
+    private \DateTimeInterface $dateTime;
 
     #[ORM\Column(type: 'string', length: 50, nullable: false, options: ['default' => ServiceStatus::ACTIVE])]
     private string $serviceStatus = ServiceStatus::ACTIVE;
 
-    public static function create(Service $service, Employee $employee, Client $client, \DateTimeInterface $date, \DateTimeInterface $time): self
+    public static function create(Service $service, Employee $employee, Client $client, \DateTimeInterface $dateTime): self
     {
         $visit = new self();
         $visit->service = $service;
         $visit->employee = $employee;
         $visit->client = $client;
-        $visit->date = $date;
-        $visit->time = $time;
+        $visit->dateTime = $dateTime;
 
         return $visit;
     }
@@ -59,14 +55,9 @@ class Visit
         return $this->id;
     }
 
-    public function getDate(): \DateTimeInterface
+    public function getDateTime(): \DateTimeInterface
     {
-        return $this->date;
-    }
-
-    public function getTime(): \DateTimeInterface
-    {
-        return $this->time;
+        return $this->dateTime;
     }
 
     public function getService(): Service
@@ -105,14 +96,9 @@ class Visit
         return $this;
     }
 
-    public function setDate(\DateTimeInterface $date): void
+    public function setDateTime(\DateTimeInterface $dateTime): void
     {
-        $this->date = $date;
-    }
-
-    public function setTime(\DateTimeInterface $time): void
-    {
-        $this->time = $time;
+        $this->dateTime = $dateTime;
     }
 
     public function getServiceStatus(): string

@@ -3,10 +3,15 @@
 namespace App\Controller;
 
 use App\Entity\User\User;
+use App\Entity\Visit;
 use App\ReadModel\CategoryFetcher;
 use App\ReadModel\ServiceFetcher;
+use App\ReadModel\Visit\VisitFetcher;
+use App\ReadModel\Visit\Filter;
 use App\UseCase\Visit\Create;
+use App\UseCase\Visit\Move;
 use Doctrine\DBAL\Exception;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,18 +19,70 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class VisitController extends AbstractController
 {
+    private const PER_PAGE = 30;
+
     public function __construct(
         private readonly ServiceFetcher $serviceFetcher,
         private readonly CategoryFetcher $categoryFetcher,
+        private readonly VisitFetcher $visitFetcher,
     )
     {
     }
 
-    #[Route('/visits', name: 'app_visit')]
-    public function index(): Response
+    /**
+     * @throws Exception
+     */
+    #[Route('/visits/clients', name: 'app_employee_records')]
+    #[IsGranted('ROLE_EMPLOYEE')]
+    public function employeeRecords(Request $request): Response
     {
-        return $this->render('app/main/visit.html.twig', [
-            'controller_name' => 'VisitController',
+        $filter = new Filter\Filter();
+
+        $form = $this->createForm(Filter\Form::class, $filter);
+        $form->handleRequest($request);
+
+        /** @var User $employee */
+        $employee = $this->getUser();
+
+        $pagination = $this->visitFetcher->getActiveRecordsByEmployeeId(
+            $employee->getId(),
+            $filter,
+            $request->query->getInt('page', 1),
+            self::PER_PAGE,
+            $request->query->get('sort', 'date_time'),
+            $request->query->get('direction', 'desc')
+        );
+
+        return $this->render('app/main/visitEmployee.html.twig', [
+            'pagination' => $pagination,
+            'form' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/records', name: 'app_client_records')]
+    #[IsGranted('ROLE_USER')]
+    public function clientRecords(Request $request): Response
+    {
+        $filter = new Filter\Filter();
+
+        $form = $this->createForm(Filter\Form::class, $filter);
+        $form->handleRequest($request);
+
+        /** @var User $client */
+        $client = $this->getUser();
+
+        $pagination = $this->visitFetcher->getActiveRecordsByClientId(
+            $client->getId(),
+            $filter,
+            $request->query->getInt('page', 1),
+            self::PER_PAGE,
+            $request->query->get('sort', 'date_time'),
+            $request->query->get('direction', 'desc')
+        );
+
+        return $this->render('app/main/visitClient.html.twig', [
+            'pagination' => $pagination,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -48,16 +105,14 @@ class VisitController extends AbstractController
     #[Route('/appointment', name: 'app_appointment', methods: ['POST'])]
     public function actionPost(Request $request, Create\Handler $handler): Response
     {
-        $data = $request->request->all();
+        $serviceId = $request->request->get('serviceId');
         /** @var User $currentClient */
         $currentClient = $this->getUser();
         $command = new Create\Command($currentClient->getId());
 
-        $form = $this->createForm(Create\Form::class, $command, [
-            'csrf_protection' => false,
-        ]);
+        $form = $this->createForm(Create\Form::class, $command);
 
-        $form->submit($data);
+        $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
@@ -72,7 +127,58 @@ class VisitController extends AbstractController
         }
 
         return $this->redirect($this->generateUrl('app_booking', [
-            'serviceId' => $data['serviceId'],
+            'serviceId' => $serviceId,
         ]));
+    }
+
+    /**
+     * @throws \Exception
+     */
+    #[Route('/visit/{id}/edit', name: 'app_visit_move')]
+    public function moveRecord(Visit $visit, Request $request, Move\Handler $handler): Response
+    {
+        /** @var User $employee */
+        $employee = $this->getUser();
+
+        $command = new Move\Command($visit->getId());
+
+        $form = $this->createForm(Move\Form::class, $command);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            try {
+                $handler->handle($command);
+                $this->addFlash('success', 'Запись успешно перенесена');
+                return $this->redirect($this->generateUrl('app_employee_records', [
+                    '_fragment' => 'list',
+                ]));
+            } catch (\Exception $e) {
+                $this->addFlash('error', $e->getMessage());
+            }
+        }
+
+        return $this->render('app/main/visit/edit.html.twig', [
+            'visit' => $visit,
+            'employeeId' => $employee->getId(),
+        ]);
+    }
+
+    /**
+     * @throws Exception
+     */
+    #[Route('/services/listByService', name: 'app_service_by_service')]
+    public function getListByServiceId(Request $request): Response
+    {
+        $serviceId = $request->request->get('serviceId');
+
+        if ($serviceId) {
+            $services = $this->visitFetcher->getById($serviceId);
+        } else {
+            $services = $this->visitFetcher->findAll();
+        }
+
+        return $this->render('app/main/filters/_servicesByCategory.html.twig', [
+            'services' => $services,
+        ]);
     }
 }

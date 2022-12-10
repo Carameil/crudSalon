@@ -22,11 +22,10 @@ use Symfony\Component\Security\Core\User\UserInterface;
 #[InheritanceType('JOINED')]
 #[DiscriminatorColumn(name: 'type', type: 'string')]
 #[DiscriminatorMap([
-        'client' => Client::class,
-        'employee' => Employee::class,
-        'user' => User::class
+    'client' => Client::class,
+    'employee' => Employee::class,
+    'user' => User::class
 ])]
-
 class User extends AbstractedUser implements PasswordAuthenticatedUserInterface, UserInterface
 {
     use TimestampableEntity;
@@ -39,7 +38,7 @@ class User extends AbstractedUser implements PasswordAuthenticatedUserInterface,
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'AUTO')]
     #[ORM\Column(type: 'integer')]
-    private ?int $id = null;
+    protected ?int $id = null;
 
     #[ORM\Column(type: 'string', length: 80)]
     protected string $firstName;
@@ -50,14 +49,14 @@ class User extends AbstractedUser implements PasswordAuthenticatedUserInterface,
     #[ORM\Column(type: 'string', length: 80, nullable: true)]
     protected ?string $middleName = null;
 
-    #[ORM\Column(type: "string", length: 180, unique:true)]
+    #[ORM\Column(type: "string", length: 180, unique: true)]
     protected string $email;
 
     #[ORM\Column(type: "string", length: 16, options: ['default' => Status::STATUS_ACTIVE])]
-    private string $status;
+    protected string $status;
 
     #[ORM\Column(name: "passwordHash", type: "string", nullable: true)]
-    private ?string $passwordHash = null;
+    protected ?string $passwordHash = null;
 
     #[ORM\Column(type: "json")]
     protected array $roles = [];
@@ -72,11 +71,11 @@ class User extends AbstractedUser implements PasswordAuthenticatedUserInterface,
     }
 
     final public static function create(
-            string $firstName,
-            string $lastName,
-            string $email,
-            string $passwordHash = null,
-            string $middleName = null,
+        string $firstName,
+        string $lastName,
+        string $email,
+        string $passwordHash = null,
+        string $middleName = null,
     ): self
     {
         $user = new self($firstName, $lastName, $email, $middleName);
@@ -172,7 +171,7 @@ class User extends AbstractedUser implements PasswordAuthenticatedUserInterface,
         return Subordinate::SUB_EMPLOYEE === $subordinate;
     }
 
-    public function changeStatus(Status $status): void
+    public function changeStatus(string $status): void
     {
         if ($this->status === $status) {
             throw new \DomainException('Status is already same.');

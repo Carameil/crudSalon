@@ -41,8 +41,7 @@ class Handler
             $service,
             $employee,
             $client,
-            new \DateTimeImmutable($command->date),
-            new \DateTimeImmutable($command->time),
+            new \DateTimeImmutable($command->date .' '.  $command->time),
         );
 
         $this->visitRepository->save($visit);

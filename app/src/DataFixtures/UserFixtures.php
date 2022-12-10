@@ -48,7 +48,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
             '89252223355'
         );
         $employee->setPassword($this->passwordHasher->hashPassword($employee, 'employee'));
-        $employee->setPosition($this->positionRepository->findOneBy(['name' => 'testPosition']));
+        $employee->setPosition($this->positionRepository->repo->findOneBy(['name' => 'testPosition']));
         $manager->persist($employee);
 
         /** @var Service $service */
@@ -57,8 +57,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
             $service,
             $employee,
             $client,
-            new \DateTimeImmutable('2022-11-18'),
-            new \DateTimeImmutable('15:00:00')
+            new \DateTimeImmutable('2022-11-18 15:00:00'),
         );
         $manager->persist($visit);
 
@@ -106,16 +105,14 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
         Service $service,
         Employee $employee,
         Client $client,
-        \DateTimeInterface $date,
-        \DateTimeInterface $time
+        \DateTimeInterface $dateTime,
     ): Visit
     {
         return Visit::create(
             $service,
             $employee,
             $client,
-            $date,
-            $time
+            $dateTime,
         );
     }
 

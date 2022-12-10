@@ -5,7 +5,7 @@ namespace App\Repository;
 use App\Entity\Position;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityNotFoundException;
-use EasyCorp\Bundle\EasyAdminBundle\Orm\EntityRepository;
+use Doctrine\ORM\EntityRepository;
 
 class PositionRepository
 {

@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20221204182905 extends AbstractMigration
+final class Version20221208183821 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -20,7 +20,7 @@ final class Version20221204182905 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('CREATE UNIQUE INDEX date_time_ui ON visit (date, time)');
+        $this->addSql('CREATE UNIQUE INDEX date_time_ui ON visit (date_time)');
     }
 
     public function down(Schema $schema): void

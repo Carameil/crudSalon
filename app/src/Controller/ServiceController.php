@@ -66,9 +66,10 @@ class ServiceController extends AbstractController
 
         $bookServiceId ? $bookService = $this->serviceFetcher->getById($bookServiceId) : $bookService = null;
 
-        return $this->render('app/main/filters/_servicesSelectorByCategory.html.twig', [
-            'services' => $services,
-            'bookService' => $bookService
-        ]);
+        return $this->json(['services' => $services]);
+//        return $this->render('app/main/filters/_servicesSelectorByCategory.html.twig', [
+//            'services' => $services,
+//            'bookService' => $bookService
+//        ]);
     }
 }

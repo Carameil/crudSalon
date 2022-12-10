@@ -52,7 +52,8 @@
             <div class="row">
                 <div class="col-lg-3 d-flex mb-sm-4 ftco-animate">
                     <div class="staff">
-                        <div class="img mb-4" style="background-image: url(images/person_1.jpg);"></div>
+                        <div class="img mb-4"
+                             style="background-image: url({{ absolute_url(asset('build/images/person_1.jpg')) }});"></div>
                         <div class="info text-center">
                             <h3><a href="teacher-single.html">Mellisa Smith</a></h3>
                             <span class="position">Stylist</span>
@@ -65,7 +66,8 @@
                 </div>
                 <div class="col-lg-3 d-flex mb-sm-4 ftco-animate">
                     <div class="staff">
-                        <div class="img mb-4" style="background-image: url(images/person_2.jpg);"></div>
+                        <div class="img mb-4"
+                             style="background-image:url({{ absolute_url(asset('build/images/person_2.jpg')) }})"></div>
                         <div class="info text-center">
                             <h3><a href="teacher-single.html">Marie Mush</a></h3>
                             <span class="position">Fashionist</span>
@@ -78,7 +80,8 @@
                 </div>
                 <div class="col-lg-3 d-flex mb-sm-4 ftco-animate">
                     <div class="staff">
-                        <div class="img mb-4" style="background-image: url(images/person_3.jpg);"></div>
+                        <div class="img mb-4"
+                             style="background-image: url({{ absolute_url(asset('build/images/person_3.jpg')) }})"></div>
                         <div class="info text-center">
                             <h3><a href="teacher-single.html">Ana Jacobson</a></h3>
                             <span class="position">Makeup Stylist</span>
@@ -91,7 +94,8 @@
                 </div>
                 <div class="col-lg-3 d-flex mb-sm-4 ftco-animate">
                     <div class="staff">
-                        <div class="img mb-4" style="background-image: url(images/person_4.jpg);"></div>
+                        <div class="img mb-4"
+                             style="background-image: url({{ absolute_url(asset('build/images/person_4.jpg')) }});"></div>
                         <div class="info text-center">
                             <h3><a href="teacher-single.html">Ivan Dorchsner</a></h3>
                             <span class="position">Nail Specialist</span>
@@ -106,7 +110,8 @@
         </div>
     </section>
 
-    <section class="ftco-section ftco-discount img" style="background-image: url(images/bg_2.jpg);">
+    <section class="ftco-section ftco-discount img"
+             style="background-image: url({{ absolute_url(asset('build/images/bg_2.jpg')) }});">
         <div class="overlay"></div>
         <div class="container">
             <div class="row justify-content-end">
@@ -134,7 +139,8 @@
             <div class="row">
                 <div class="col-md-4 ftco-animate">
                     <a href="#" class="work-entry">
-                        <img src="images/work-1.jpg" class="img-fluid" alt="Colorlib Template">
+                        <img src="{{ absolute_url(asset('build/images/work-1.jpg')) }}" class="img-fluid"
+                             alt="Colorlib Template">
                         <div class="info d-flex align-items-center">
                             <div>
                                 <div class="icon mb-4 d-flex align-items-center justify-content-center">
@@ -147,7 +153,8 @@
                 </div>
                 <div class="col-md-4 ftco-animate">
                     <a href="#" class="work-entry">
-                        <img src="images/work-2.jpg" class="img-fluid" alt="Colorlib Template">
+                        <img src="{{ absolute_url(asset('build/images/work-2.jpg')) }}" class="img-fluid"
+                             alt="Colorlib Template">
                         <div class="info d-flex align-items-center">
                             <div>
                                 <div class="icon mb-4 d-flex align-items-center justify-content-center">
@@ -160,7 +167,8 @@
                 </div>
                 <div class="col-md-4 ftco-animate">
                     <a href="#" class="work-entry">
-                        <img src="images/work-3.jpg" class="img-fluid" alt="Colorlib Template">
+                        <img src="{{ absolute_url(asset('build/images/work-3.jpg')) }}" class="img-fluid"
+                             alt="Colorlib Template">
                         <div class="info d-flex align-items-center">
                             <div>
                                 <div class="icon mb-4 d-flex align-items-center justify-content-center">
@@ -182,22 +190,26 @@
                     <div class="row">
                         <div class="col-md-3 ftco-animate">
                             <a href="#" class="partner-entry">
-                                <img src="images/partner-1.jpg" class="img-fluid" alt="Colorlib template">
+                                <img src="{{ absolute_url(asset('build/images/partner-1.jpg')) }}" class="img-fluid"
+                                     alt="Colorlib template">
                             </a>
                         </div>
                         <div class="col-md-3 ftco-animate">
                             <a href="#" class="partner-entry">
-                                <img src="images/partner-2.jpg" class="img-fluid" alt="Colorlib template">
+                                <img src="{{ absolute_url(asset('build/images/partner-2.jpg')) }}" class="img-fluid"
+                                     alt="Colorlib template">
                             </a>
                         </div>
                         <div class="col-md-3 ftco-animate">
                             <a href="#" class="partner-entry">
-                                <img src="images/partner-3.jpg" class="img-fluid" alt="Colorlib template">
+                                <img src="{{ absolute_url(asset('build/images/partner-3.jpg')) }}" class="img-fluid"
+                                     alt="Colorlib template">
                             </a>
                         </div>
                         <div class="col-md-3 ftco-animate">
                             <a href="#" class="partner-entry">
-                                <img src="images/partner-4.jpg" class="img-fluid" alt="Colorlib template">
+                                <img src="{{ absolute_url(asset('build/images/partner-4.jpg')) }}" class="img-fluid"
+                                     alt="Colorlib template">
                             </a>
                         </div>
                     </div>
@@ -288,7 +300,8 @@
         </div>
     </section>
 
-    <section class="ftco-section ftco-counter img" id="section-counter" style="background-image: url(images/bg_4.jpg);">
+    <section class="ftco-section ftco-counter img" id="section-counter"
+             style="background-image: url({{ absolute_url(asset('build/images/bg_4.jpg')) }});">
         <div class="overlay"></div>
         <div class="container">
             <div class="row justify-content-center">
@@ -349,7 +362,7 @@
                 <div class="col-md-4 d-flex ftco-animate">
                     <div class="blog-entry align-self-stretch">
                         <a href="blog-single.html" class="block-20"
-                           style="background-image: url('images/image_1.jpg');">
+                           style="background-image: url({{ absolute_url(asset('build/images/image_1.jpg')) }});">
                         </a>
                         <div class="text py-4 d-block">
                             <div class="meta">
@@ -366,7 +379,7 @@
                 <div class="col-md-4 d-flex ftco-animate">
                     <div class="blog-entry align-self-stretch">
                         <a href="blog-single.html" class="block-20"
-                           style="background-image: url('images/image_2.jpg');">
+                           style="background-image: url({{ absolute_url(asset('build/images/image_2.jpg')) }});">
                         </a>
                         <div class="text py-4 d-block">
                             <div class="meta">
@@ -383,7 +396,7 @@
                 <div class="col-md-4 d-flex ftco-animate">
                     <div class="blog-entry align-self-stretch">
                         <a href="blog-single.html" class="block-20"
-                           style="background-image: url('images/image_3.jpg');">
+                           style="background-image:url({{ absolute_url(asset('build/images/image_3.jpg')) }});">
                         </a>
                         <div class="text py-4 d-block">
                             <div class="meta">
@@ -427,7 +440,9 @@
                 </div>
                 <div class="col-md-6 appointment pl-md-5 ftco-animate">
                     <h3 class="mb-3">Appointments</h3>
-                    <form action="{{ path('app_appointment') }}" method="POST" class="appointment-form">
+                    <form action="{{ path('app_appointment') }}" method="POST" enctype="multipart/form-data"
+                          class="appointment-form">
+                        <input type="hidden" name="_token" value="{{ csrf_token('csrf_token') }}">
                         <div class="row form-group d-flex">
                             <div class="col-md-6">
                                 <div class="categoryContainer">
@@ -437,29 +452,24 @@
                                                     selected>{{ bookCategory[0].name }}</option>
                                         {% else %}
                                             <option value="" disabled selected>Выберите категорию услуг</option>
-                                        {% endif %}
                                         {% for category in categories %}
                                             <option style="color: black"
                                                     value="{{ category.id }}">{{ category.name }}</option>
                                         {% endfor %}
+                                        {% endif %}
                                     </select>
                                 </div>
                             </div>
 
                             <div class="col-md-6">
                                 <div class="servicesContainer">
-                                    {% if (bookService) %}
-                                        <select class="form-control" name="serviceId" id="servicesDropdown">
-                                            {% if (bookService) %}
-                                                <option value="{{ bookService[0].id }}" disabled
-                                                        selected>{{ bookService[0].name }}</option>
-                                            {% endif %}
-                                            {% for service in services %}
-                                                <option style="color: black"
-                                                        value="{{ service.id }}">{{ service.name }}</option>
-                                            {% endfor %}
-                                        </select>
-                                    {% endif %}
+                                    <select class="form-control" name="serviceId" id="servicesDropdown" disabled>
+                                        {% if (bookService) %}
+                                            <option value="{{ bookService[0].id }}" disabled
+                                                    selected>{{ bookService[0].name }}</option>
+                                        {% endif %}
+                                        <option value="" disabled selected>Выберите услугу</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -468,7 +478,7 @@
                             <div class="col-md-6">
                                 <div class="employeesContainer">
                                     {% if (employeesByBookService) %}
-                                        <select class="form-control" name="employeeId" id="employeesDropdown">
+                                        <select class="form-control" name="employeeId" id="employeesDropdown" disabled>
                                             <option value=""> Выберите мастера</option>
                                             {% for employee in employeesByBookService %}
                                                 <option style="color: black"
@@ -511,7 +521,7 @@
         $(document).ready(function () {
             $(document).on("change", "#categoriesDropdown", function (event) {
                 event.preventDefault();
-                var value = $(this).val();
+                var value = $('#categoriesDropdown option:selected').val();
                 $.ajax({
                     url: '{{ (path('app_services_selector_by_category')) }}',
                     type: "POST",
@@ -519,8 +529,18 @@
                         "categoryId": value,
                     },
                     success: function (data) {
-                        console.log(data);
-                        $('.servicesContainer').html(data);
+                        let services = [];
+                        data['services'].map((service) =>
+                            services.push({id: service.id, name: service.name}));
+                        let $mySelect = $('#servicesDropdown');
+                        $.each(services, function (key, value) {
+                            let $option = $("<option/>", {
+                                value: value.id,
+                                text: value.name
+                            }).css('color', 'black');
+                            $mySelect.append($option);
+                        });
+                            $('#servicesDropdown').removeAttr('disabled');
                     },
                     error: function (err) {
                         console.log(err.statusText);
@@ -528,7 +548,8 @@
                 });
 
                 return false;
-            })
+            });
+            $( "#categoriesDropdown" ).trigger( "change" );
         });
 
         $(document).ready(function () {
