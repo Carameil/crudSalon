@@ -82,7 +82,9 @@ class VisitFetcher
             ->innerJoin('v', 'service', 's', 's.id = v.service_id')
             ->innerJoin('v', '"user"', 'u', 'v.client_id = u.id')
             ->andWhere('v.employee_id = :employeeId')
-            ->setParameter('employeeId', $employeeId);
+            ->andWhere('v.service_status = :serviceStatus')
+            ->setParameter('employeeId', $employeeId)
+            ->setParameter('serviceStatus', ServiceStatus::ACTIVE);
 
         $this->fetchFilter($filter, $stmt);
 
@@ -108,7 +110,9 @@ class VisitFetcher
             ->innerJoin('v', 'service', 's', 's.id = v.service_id')
             ->innerJoin('v', '"user"', 'u', 'v.employee_id = u.id')
             ->andWhere('v.client_id = :clientId')
-            ->setParameter('clientId', $clientId);
+            ->andWhere('v.service_status = :serviceStatus')
+            ->setParameter('clientId', $clientId)
+            ->setParameter('serviceStatus', ServiceStatus::ACTIVE);
 
         $this->fetchFilter($filter, $stmt);
 

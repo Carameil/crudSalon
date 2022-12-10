@@ -10,6 +10,7 @@ use App\ReadModel\Visit\VisitFetcher;
 use App\ReadModel\Visit\Filter;
 use App\UseCase\Visit\Create;
 use App\UseCase\Visit\Move;
+use App\UseCase\Visit\Cancel;
 use Doctrine\DBAL\Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -161,6 +162,24 @@ class VisitController extends AbstractController
             'visit' => $visit,
             'employeeId' => $employee->getId(),
         ]);
+    }
+
+    /**
+     * @throws \Exception
+     */
+    #[Route('/visit/{id}/cancel', name: 'app_visit_cancel')]
+    public function cancelRecord(Visit $visit, Request $request, Cancel\Handler $handler): Response
+    {
+        $command = new Cancel\Command($visit->getId());
+
+        try {
+            $handler->handle($command);
+            $this->addFlash('success', 'Запись успешно отменена');
+        } catch (\DomainException $e) {
+            $this->addFlash('error', $e->getMessage());
+        }
+
+        return $this->redirectToRoute('app_client_records');
     }
 
     /**

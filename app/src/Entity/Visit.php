@@ -113,4 +113,17 @@ class Visit
         return $this;
     }
 
+    public function isArchived(): bool
+    {
+        return $this->serviceStatus === ServiceStatus::CANCELED;
+    }
+
+    public function archive(): void
+    {
+        if ($this->isArchived()) {
+            throw new \DomainException('Member is already archived.');
+        }
+        $this->serviceStatus = ServiceStatus::CANCELED;
+    }
+
 }

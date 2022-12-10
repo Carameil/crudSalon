@@ -29,15 +29,15 @@
             background-color: #f1f1f1;
         }
     </style>
-
+    {% include "components/_flashes.html.twig" %}
     <h2 align="center">Мои записи</h2>
-    <div  style="width: 80%; margin-left: 20%">
+    <div style="width: 80%; margin-left: 20%">
         <div class="card-body">
             {{ form_start(form) }}
             <div class="row">
                 <div class="col-md-2">{{ form_widget(form.fullName) }}</div>
                 <div class="col-md-2">{{ form_widget(form.service) }}</div>
-                <div class="col-md-2">{{ form_widget(form.dateTime)}}</div>
+                <div class="col-md-2">{{ form_widget(form.dateTime) }}</div>
                 <div class="col-md-2">
                     <button type="submit" class="btn btn-primary">Фильтровать</button>
                     <a href="{{ path('app_employee_records') }}" class="btn btn-outline-secondary">Сбросить</a>
@@ -62,7 +62,9 @@
                 <td>{{ record.full_name }}</td>
                 <td>{{ record.service_name }}</td>
                 <td>{{ record.date_time }}</td>
-                <td><a href="{{ path('app_visit_move', {'id' : record.id}) }}"></a> </td>
+                <td><a href="{{ path('app_visit_cancel', {'id': record.id}) }}">
+                        <button class="btn btn-primary">Отменить</button>
+                    </a></td>
             </tr>
         {% endfor %}
     </table>

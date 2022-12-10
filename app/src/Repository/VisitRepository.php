@@ -35,7 +35,7 @@ class VisitRepository
     {
         /** @var Visit $visit */
         if (!$visit = $this->repo->find($id)) {
-            throw new EntityNotFoundException('Посещение не найдено');
+            throw new EntityNotFoundException('Запись не найдена');
         }
         return $visit;
     }
