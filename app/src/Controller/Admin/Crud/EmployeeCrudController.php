@@ -39,7 +39,7 @@ class EmployeeCrudController extends UserCrudController
     {
         $client = (new ReflectionClass(Employee::class))->newInstanceWithoutConstructor();
         $client->addRole(AbstractedUser::ROLE_EMPLOYEE);
-        $client->setStatus(Status::STATUS_WAIT);
+        $client->setStatus(Status::STATUS_WAIT->value);
         return $client;
     }
 

@@ -5,11 +5,13 @@ namespace App\Controller;
 use App\Entity\User\User;
 use App\Entity\Visit;
 use App\ReadModel\CategoryFetcher;
+use App\ReadModel\MaterialFetcher;
 use App\ReadModel\ServiceFetcher;
 use App\ReadModel\Visit\VisitFetcher;
 use App\ReadModel\Visit\Filter;
 use App\UseCase\Visit\Create;
 use App\UseCase\Visit\Move;
+use App\UseCase\Visit\Close;
 use App\UseCase\Visit\Cancel;
 use Doctrine\DBAL\Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -26,6 +28,7 @@ class VisitController extends AbstractController
         private readonly ServiceFetcher $serviceFetcher,
         private readonly CategoryFetcher $categoryFetcher,
         private readonly VisitFetcher $visitFetcher,
+        private readonly MaterialFetcher $materialFetcher,
     )
     {
     }
@@ -166,6 +169,36 @@ class VisitController extends AbstractController
 
     /**
      * @throws \Exception
+     * @throws \PHPUnit\Exception
+     */
+    #[Route('/visit/{id}/close', name: 'app_visit_close')]
+    public function closeRecord(Visit $visit, Request $request, Close\Handler $handler): Response
+    {
+        $command = new Close\Command($visit->getId());
+
+        $form = $this->createForm(Close\Form::class, $command);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            try {
+                $handler->handle($command);
+                $this->addFlash('success', 'Запись успешно закрыта');
+                return $this->redirectToRoute('app_employee_records', [
+                    '_fragment' => 'list',
+                ]);
+            } catch (\Exception $e) {
+                $this->addFlash('error', $e->getMessage());
+            }
+        }
+
+        return $this->render('app/main/visit/close.html.twig', [
+            'visit' => $visit,
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @throws \Exception
      */
     #[Route('/visit/{id}/cancel', name: 'app_visit_cancel')]
     public function cancelRecord(Visit $visit, Request $request, Cancel\Handler $handler): Response
@@ -181,6 +214,8 @@ class VisitController extends AbstractController
 
         return $this->redirectToRoute('app_client_records');
     }
+
+
 
     /**
      * @throws Exception

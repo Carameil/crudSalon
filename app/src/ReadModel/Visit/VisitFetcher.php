@@ -61,7 +61,7 @@ class VisitFetcher
             ->andWhere('v.service_status = :status')
             ->andWhere('v.employee_id = :employeeId')
             ->andWhere('v.date_time::timestamp::date = :date')
-            ->setParameter('status', ServiceStatus::ACTIVE)
+            ->setParameter('status', ServiceStatus::ACTIVE->value)
             ->setParameter('date', $date)
             ->setParameter('employeeId', $employeeId);
 
@@ -74,6 +74,7 @@ class VisitFetcher
         $stmt = $this->connection->createQueryBuilder();
         $stmt->select("
         v.id,
+        v.client_id,
         CONCAT_WS(' ', u.last_name, u.first_name, u.middle_name) as full_name,
         s.name as service_name,
         v.date_time as date_time
@@ -84,7 +85,7 @@ class VisitFetcher
             ->andWhere('v.employee_id = :employeeId')
             ->andWhere('v.service_status = :serviceStatus')
             ->setParameter('employeeId', $employeeId)
-            ->setParameter('serviceStatus', ServiceStatus::ACTIVE);
+            ->setParameter('serviceStatus', ServiceStatus::ACTIVE->value);
 
         $this->fetchFilter($filter, $stmt);
 
@@ -112,7 +113,7 @@ class VisitFetcher
             ->andWhere('v.client_id = :clientId')
             ->andWhere('v.service_status = :serviceStatus')
             ->setParameter('clientId', $clientId)
-            ->setParameter('serviceStatus', ServiceStatus::ACTIVE);
+            ->setParameter('serviceStatus', ServiceStatus::ACTIVE->value);
 
         $this->fetchFilter($filter, $stmt);
 
