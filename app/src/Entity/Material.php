@@ -7,7 +7,7 @@ use App\Repository\MaterialRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[ORM\Entity(repositoryClass: MaterialRepository::class)]
+#[ORM\Entity]
 class Material
 {
     #[ORM\Id]
@@ -31,8 +31,8 @@ class Material
     #[Assert\GreaterThan(0)]
     private string $quantity;
 
-    #[ORM\Column(type: "string", length: 5, options: ['default' => Unit::THING])]
-    private string $unit = Unit::THING;
+    #[ORM\Column(type: "string", length: 5, options: ['default' => Unit::THING->value])]
+    private string $unit = Unit::THING->value;
 
     public function getId(): int
     {
@@ -138,5 +138,10 @@ class Material
     public function setUnit(string $unit): void
     {
         $this->unit = $unit;
+    }
+
+    public function checkUnit(string $unit): bool
+    {
+        return $this->unit === $unit;
     }
 }

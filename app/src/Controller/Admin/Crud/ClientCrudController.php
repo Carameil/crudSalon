@@ -39,7 +39,7 @@ class ClientCrudController extends UserCrudController
     {
         $client = (new ReflectionClass(Client::class))->newInstanceWithoutConstructor();
         $client->addRole(AbstractedUser::ROLE_USER);
-        $client->setStatus(Status::STATUS_ACTIVE);
+        $client->setStatus(Status::STATUS_ACTIVE->value);
         return $client;
     }
 

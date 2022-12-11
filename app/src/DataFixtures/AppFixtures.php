@@ -55,7 +55,7 @@ class AppFixtures extends Fixture
         $materialServices->setService($service);
         $materialServices->setMaterial($material);
         $materialServices->setQuantityMaterial(10);
-        $materialServices->setUnit(Unit::MILLILITER);
+        $materialServices->setUnit(Unit::MILLILITER->value);
 
         $manager->persist($materialServices);
 

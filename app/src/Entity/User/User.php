@@ -52,7 +52,7 @@ class User extends AbstractedUser implements PasswordAuthenticatedUserInterface,
     #[ORM\Column(type: "string", length: 180, unique: true)]
     protected string $email;
 
-    #[ORM\Column(type: "string", length: 16, options: ['default' => Status::STATUS_ACTIVE])]
+    #[ORM\Column(type: "string", length: 16, options: ['default' => Status::STATUS_ACTIVE->value])]
     protected string $status;
 
     #[ORM\Column(name: "passwordHash", type: "string", nullable: true)]
@@ -67,7 +67,7 @@ class User extends AbstractedUser implements PasswordAuthenticatedUserInterface,
         $this->lastName = $lastName;
         $this->middleName = $middleName;
         $this->email = $email;
-        $this->status = Status::STATUS_ACTIVE;
+        $this->status = Status::STATUS_ACTIVE->value;
     }
 
     final public static function create(
@@ -163,12 +163,12 @@ class User extends AbstractedUser implements PasswordAuthenticatedUserInterface,
 
     public function isClient(string $subordinate): bool
     {
-        return Subordinate::SUB_CLIENT === $subordinate;
+        return Subordinate::SUB_CLIENT->value === $subordinate;
     }
 
     public function isEmployee(string $subordinate): bool
     {
-        return Subordinate::SUB_EMPLOYEE === $subordinate;
+        return Subordinate::SUB_EMPLOYEE->value === $subordinate;
     }
 
     public function changeStatus(string $status): void

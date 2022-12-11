@@ -36,8 +36,8 @@ class Visit
     #[ORM\Column(type: 'datetime_immutable')]
     private \DateTimeInterface $dateTime;
 
-    #[ORM\Column(type: 'string', length: 50, nullable: false, options: ['default' => ServiceStatus::ACTIVE])]
-    private string $serviceStatus = ServiceStatus::ACTIVE;
+    #[ORM\Column(type: 'string', length: 50, nullable: false, options: ['default' => ServiceStatus::ACTIVE->value])]
+    private string $serviceStatus = ServiceStatus::ACTIVE->value;
 
     public static function create(Service $service, Employee $employee, Client $client, \DateTimeInterface $dateTime): self
     {
@@ -115,7 +115,7 @@ class Visit
 
     public function isArchived(): bool
     {
-        return $this->serviceStatus === ServiceStatus::CANCELED;
+        return $this->serviceStatus === ServiceStatus::CANCELED->value;
     }
 
     public function archive(): void
@@ -123,7 +123,7 @@ class Visit
         if ($this->isArchived()) {
             throw new \DomainException('Member is already archived.');
         }
-        $this->serviceStatus = ServiceStatus::CANCELED;
+        $this->serviceStatus = ServiceStatus::CANCELED->value;
     }
 
 }

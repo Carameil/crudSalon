@@ -29,10 +29,10 @@ class MaterialCrudController extends AbstractCrudController
             IntegerField::new('quantity'),
             ChoiceField::new('unit')
                 ->setChoices([
-                    'шт' => Unit::THING,
-                    'мл' => Unit::MILLILITER,
-                    'л' => Unit::LITER,
-                    'уп' => Unit::PACKING,
+                    'шт' => Unit::THING->value,
+                    'мл' => Unit::MILLILITER->value,
+                    'л' => Unit::LITER->value,
+                    'уп' => Unit::PACKING->value,
                 ])
 
         ];

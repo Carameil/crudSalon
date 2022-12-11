@@ -55,9 +55,9 @@ class UserCrudController extends AbstractCrudController
             TextField::new('middleName'),
             EmailField::new('email'),
             ChoiceField::new('status')->setChoices([
-                'Ожидает подтверждения' => Status::STATUS_WAIT,
-                'Активный' => Status::STATUS_ACTIVE,
-                'Заблокирован' => Status::STATUS_BLOCKED
+                'Ожидает подтверждения' => Status::STATUS_WAIT->value,
+                'Активный' => Status::STATUS_ACTIVE->value,
+                'Заблокирован' => Status::STATUS_BLOCKED->value
             ]),
             TextField::new('type')->setDisabled(),
         ];
@@ -82,9 +82,9 @@ class UserCrudController extends AbstractCrudController
     {
         $filters
             ->add(ChoiceFilter::new('status')->setChoices([
-                'Ожидает подтверждения' => Status::STATUS_WAIT,
-                'Активный' => Status::STATUS_ACTIVE,
-                'Заблокирован' => Status::STATUS_BLOCKED
+                'Ожидает подтверждения' => Status::STATUS_WAIT->value,
+                'Активный' => Status::STATUS_ACTIVE->value,
+                'Заблокирован' => Status::STATUS_BLOCKED->value
             ]))
             ->add(TextFilter::new('email'))
             ->add(FullNameFilter::new('fullName'))

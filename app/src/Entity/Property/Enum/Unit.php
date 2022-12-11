@@ -2,10 +2,13 @@
 
 namespace App\Entity\Property\Enum;
 
+use App\Utils\Traits\EnumToArray;
+
 enum Unit: string
 {
-    public const THING = 'шт';
-    public const LITER = 'л';
-    public const MILLILITER = 'мл';
-    public const PACKING = 'уп';
+    use EnumToArray;
+    case THING = 'шт';
+    case LITER = 'л';
+    case MILLILITER = 'мл';
+    case PACKING = 'уп';
 }
