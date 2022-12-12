@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Закрытие записи{% endblock %}
+{% block breadcrumbs %}
+    <p class="breadcrumbs" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }"><span
+                class="mr-2"><a href="{{ path('app_home') }}">Home</a></span>
+        <a href="{{ path('app_employee_records') }}"><span>Активные записи</span></a>
+        <span>Закрытие записи</span></p>
+{% endblock %}
+
+    {% block body %}
+        <div class="card-body p-4">
+        {% include 'components/_flashes.html.twig' %}
+
+        <h1 style="text-align: center">Закрытие записи</h1>
+
+        <p style="text-align: center" class="text-muted">Введите информацию по услуге</p>
+
+        {{ form_start(form) }}
+        {# render each row and field in the embedded form, in this example it's rendering the experience (Exp) fiels as rows #}
+        <div style="text-align: center; margin-left: 17%" class="col-sm-8 col-sm-offset-2" id="exp_list"
+             data-prototype="{{ form_widget(form.materials.vars.prototype)|e('html_attr') }}">
+            {% for material in form.materials %}
+                <div class="panel panel-warning">
+{#                    <div class="panel-heading">#}
+{#                        <strong>{{ material.vars.value.title }}</strong>#}
+{#                    </div>#}
+                    <div class="panel-body">
+                        {{ form_row(material) }}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <a href="{{ path('app_visit_close', {'id' : visit.id}) }}">
+            <button style="position: relative;left: 50%;transform: translate(-50%, 0); margin-top: 5%; margin-bottom: 10%"
+                    class="btn btn-success">Закрыть запись
+            </button>
+        </a>
+        {{ form_end(form) }}
+    {% endblock %}

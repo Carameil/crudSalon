@@ -4,39 +4,42 @@ namespace App\Repository;
 
 use App\Entity\Material;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityNotFoundException;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-/**
- * @extends ServiceEntityRepository<Material>
- *
- * @method Material|null find($id, $lockMode = null, $lockVersion = null)
- * @method Material|null findOneBy(array $criteria, array $orderBy = null)
- * @method Material[]    findAll()
- * @method Material[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
- */
-class MaterialRepository extends ServiceEntityRepository
+class MaterialRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public EntityRepository $repo;
+
+    public function __construct(
+        private readonly EntityManagerInterface $em,
+    )
     {
-        parent::__construct($registry, Material::class);
+        $this->repo = $this->em->getRepository(Material::class);
     }
 
-    public function save(Material $entity, bool $flush = false): void
+    public function save(Material $entity): void
     {
-        $this->getEntityManager()->persist($entity);
-
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
+        $this->em->persist($entity);
     }
 
-    public function remove(Material $entity, bool $flush = false): void
+    public function remove(Material $entity): void
     {
-        $this->getEntityManager()->remove($entity);
+        $this->em->remove($entity);
+    }
 
-        if ($flush) {
-            $this->getEntityManager()->flush();
+    /**
+     * @throws EntityNotFoundException
+     */
+    public function get($id): Material
+    {
+        /** @var Material $material */
+        if (!$material = $this->repo->find($id)) {
+            throw new EntityNotFoundException('Материал не найден');
         }
+        return $material;
     }
 
 //    /**

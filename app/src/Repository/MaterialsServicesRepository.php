@@ -4,63 +4,41 @@ namespace App\Repository;
 
 use App\Entity\MaterialsServices;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityNotFoundException;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-/**
- * @extends ServiceEntityRepository<MaterialsServices>
- *
- * @method MaterialsServices|null find($id, $lockMode = null, $lockVersion = null)
- * @method MaterialsServices|null findOneBy(array $criteria, array $orderBy = null)
- * @method MaterialsServices[]    findAll()
- * @method MaterialsServices[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
- */
-class MaterialsServicesRepository extends ServiceEntityRepository
+class MaterialsServicesRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public EntityRepository $repo;
+
+    public function __construct(
+        private readonly EntityManagerInterface $em,
+    )
     {
-        parent::__construct($registry, MaterialsServices::class);
+        $this->repo = $this->em->getRepository(MaterialsServices::class);
     }
 
-    public function save(MaterialsServices $entity, bool $flush = false): void
+    public function save(MaterialsServices $entity): void
     {
-        $this->getEntityManager()->persist($entity);
+        $this->em->persist($entity);
+    }
 
-        if ($flush) {
-            $this->getEntityManager()->flush();
+    public function remove(MaterialsServices $entity): void
+    {
+        $this->em->remove($entity);
+    }
+
+    /**
+     * @throws EntityNotFoundException
+     */
+    public function get($id): MaterialsServices
+    {
+        /** @var MaterialsServices $materialService */
+        if (!$materialService = $this->repo->find($id)) {
+            throw new EntityNotFoundException('Материал не найден');
         }
+        return $materialService;
     }
-
-    public function remove(MaterialsServices $entity, bool $flush = false): void
-    {
-        $this->getEntityManager()->remove($entity);
-
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
-    }
-
-//    /**
-//     * @return MaterialsServices[] Returns an array of MaterialsServices objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('m')
-//            ->andWhere('m.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('m.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?MaterialsServices
-//    {
-//        return $this->createQueryBuilder('m')
-//            ->andWhere('m.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
 }

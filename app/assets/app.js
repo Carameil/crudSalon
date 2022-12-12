@@ -16,6 +16,7 @@ global.$ = global.jQuery = $;
 
 // import './js/jquery.min';
 import './js/popper.min';
+import './js/collection.js';
 import './js/bootstrap.min';
 import './js/jquery.easing.1.3';
 import './js/jquery.waypoints.min';
