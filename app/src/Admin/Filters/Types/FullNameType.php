@@ -16,6 +16,7 @@ class FullNameType extends AbstractType
     {
         $builder
             ->add('value', ChildFullNameType::class, [
+                'label' => 'Значение'
             ])
             ->add('comparison', HiddenType::class, [
                 'data' => ComparisonType::CONTAINS,

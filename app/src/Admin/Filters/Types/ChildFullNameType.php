@@ -14,14 +14,14 @@ class ChildFullNameType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('firstName', TextType::class, [
-                'help' => 'firstName',
-            ])
             ->add('lastName', TextType::class, [
-                'help' => 'lastName',
+                'help' => 'Фамилия',
+            ])
+            ->add('firstName', TextType::class, [
+                'help' => 'Имя',
             ])
             ->add('middleName', TextType::class, [
-                'help' => 'middleName',
+                'help' => 'Отчество',
             ])
             ->add('comparison', HiddenType::class, [
                 'data' => ComparisonType::CONTAINS,

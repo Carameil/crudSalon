@@ -25,9 +25,9 @@ class VisitController extends AbstractController
     private const PER_PAGE = 30;
 
     public function __construct(
-        private readonly ServiceFetcher $serviceFetcher,
+        private readonly ServiceFetcher  $serviceFetcher,
         private readonly CategoryFetcher $categoryFetcher,
-        private readonly VisitFetcher $visitFetcher,
+        private readonly VisitFetcher    $visitFetcher,
         private readonly MaterialFetcher $materialFetcher,
     )
     {
@@ -122,9 +122,11 @@ class VisitController extends AbstractController
             try {
                 $handler->handle($command);
                 $this->addFlash('success', 'Вы успешно записаны');
-                return $this->redirect($this->generateUrl('app_home', [
-                    '_fragment' => 'booking',
-                ]));
+                return $this->json([
+                    'redirect' => $this->generateUrl('app_home', [
+                        '_fragment' => 'booking',
+                    ])
+                ]);
             } catch (\Exception $e) {
                 $this->addFlash('error', $e->getMessage());
             }
@@ -214,7 +216,6 @@ class VisitController extends AbstractController
 
         return $this->redirectToRoute('app_client_records');
     }
-
 
 
     /**

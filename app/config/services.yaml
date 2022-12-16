@@ -4,7 +4,7 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
-
+    uploads: '%kernel.project_dir%/public/uploads'
 services:
     gedmo.listener.timestampable:
         class: Gedmo\Timestampable\TimestampableListener
@@ -34,6 +34,15 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
+    App\Service\FileUploader:
+        arguments:
+            $targetDirectory: '%uploads%'
+    App\Utils\Parser\ParserXlsx:
+        arguments:
+            $targetDirectory: '%uploads%'
+
+    Symfony\Component\PasswordHasher\PasswordHasherInterface:
+        class: Symfony\Component\PasswordHasher\Hasher\NativePasswordHasher
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

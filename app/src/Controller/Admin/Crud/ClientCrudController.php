@@ -5,24 +5,16 @@ namespace App\Controller\Admin\Crud;
 use App\Entity\Client;
 use App\Entity\User\AbstractedUser;
 use App\Entity\User\Enum\Status;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
-use EasyCorp\Bundle\EasyAdminBundle\Config\KeyValueStore;
-use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
-use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
-use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TelephoneField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
-use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
-use EasyCorp\Bundle\EasyAdminBundle\Filter\TextFilter;
 use ReflectionClass;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormEvents;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class ClientCrudController extends UserCrudController
 {
@@ -30,6 +22,13 @@ class ClientCrudController extends UserCrudController
     public static function getEntityFqcn(): string
     {
         return Client::class;
+    }
+
+    public function configureCrud(Crud $crud): Crud
+    {
+        return $crud
+            ->setEntityLabelInPlural('Клиенты')
+            ->setEntityLabelInSingular('Клиент');
     }
 
     /**
@@ -47,20 +46,21 @@ class ClientCrudController extends UserCrudController
     {
         $fields = [
             IdField::new('id')->hideOnForm(),
-            TextField::new('lastName'),
-            TextField::new('firstName'),
-            TextField::new('middleName'),
-            TelephoneField::new('phone'),
+            TextField::new('lastName')->setLabel('Фамилия'),
+            TextField::new('firstName')->setLabel('Имя'),
+            TextField::new('middleName')->setLabel('Отчество'),
+            TelephoneField::new('phone')->setLabel('Телефон'),
             EmailField::new('email'),
-            TextField::new('status')->onlyOnDetail(),
+            TextField::new('status')->onlyOnDetail()->setLabel('Статус'),
         ];
 
         $password = TextField::new('password')
+            ->setLabel('Пароль')
             ->setFormType(RepeatedType::class)
             ->setFormTypeOptions([
                 'type' => PasswordType::class,
-                'first_options' => ['label' => 'Password'],
-                'second_options' => ['label' => '(Repeat)'],
+                'first_options' => ['label' => 'Пароль'],
+                'second_options' => ['label' => 'Повторите пароль'],
                 'mapped' => false,
             ])
             ->setRequired($pageName === Crud::PAGE_NEW)
@@ -75,6 +75,11 @@ class ClientCrudController extends UserCrudController
     public function configureFilters(Filters $filters, ?bool $fromChild = false): Filters
     {
         return parent::configureFilters($filters, true);
+    }
+
+    public function configureActions(Actions $actions): Actions
+    {
+        return $actions;
     }
 
 }

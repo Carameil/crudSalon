@@ -29,10 +29,23 @@ class Material
 
     #[ORM\Column(type: "integer", options: ['default' => 1])]
     #[Assert\GreaterThan(0)]
-    private string $quantity;
+    private int $quantity;
 
     #[ORM\Column(type: "string", length: 5, options: ['default' => Unit::THING->value])]
     private string $unit = Unit::THING->value;
+
+    public static function create(string $name, string $manufacturer, string $supplier, int $quantity, string $unit,?string $description = null): self
+    {
+        $material = new static();
+        $material->name = $name;
+        $material->manufacturer = $manufacturer;
+        $material->supplier = $supplier;
+        $material->quantity = $quantity;
+        $material->unit = $unit;
+        $material->description = $description;
+
+        return $material;
+    }
 
     public function getId(): int
     {

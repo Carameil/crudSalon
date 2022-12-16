@@ -30,13 +30,14 @@ class EmployeeController extends AbstractController
     {
         $serviceId = $request->request->get('serviceId');
 
-        $employees = $this->employeeFetcher->findAllByServiceId($serviceId);
-        $serviceName = $this->serviceFetcher->getById($serviceId);
+        $employees = $this->employeeFetcher->findAllByServiceId((int)$serviceId);
+        $serviceName = $this->serviceFetcher->getById((int)$serviceId);
 
-        return $this->render('app/main/filters/_employeesSelectorByService.html.twig', [
-            'employees' => $employees,
-            'serviceName' => $serviceName,
-        ]);
+        return $this->json(['employees' => $employees]);
+//        return $this->render('app/main/filters/_employeesSelectorByService.html.twig', [
+//            'employees' => $employees,
+//            'serviceName' => $serviceName,
+//        ]);
     }
 
     /**

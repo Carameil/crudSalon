@@ -9,8 +9,8 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity]
-#[UniqueEntity(fields: ['date'], message: 'Данная запись уже существует')]
-#[ORM\UniqueConstraint(name: 'date_time_ui', columns: ['date_time'])]
+#[UniqueEntity(fields: ['date_time', 'client_id'], message: 'Данная запись уже существует')]
+#[ORM\UniqueConstraint(name: 'date_time_client_ui', columns: ['date_time', 'client_id'])]
 class Visit
 {
     use TimestampableEntity;

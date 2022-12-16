@@ -32,7 +32,7 @@ class Service
     #[Assert\GreaterThan(0)]
     private int $price;
 
-    #[ORM\Column(type: 'text')]
+    #[ORM\Column(type: 'text', nullable: true)]
     private ?string $description = null;
 
     #[ORM\Column(type: 'integer')]
@@ -41,8 +41,9 @@ class Service
     #[ORM\OneToMany(mappedBy: 'service', targetEntity: MaterialsServices::class)]
     private ?Collection $materials = null;
 
-    public static function create(string $name, Category $category, Position $position, int $price, int $avgTime, string $description = null): self {
-        $service = new self();
+    public static function create(string $name, Category $category, Position $position, int $price, int $avgTime, ?string $description = null): self
+    {
+        $service = new static();
         $service->name = $name;
         $service->category = $category;
         $service->position = $position;
@@ -69,7 +70,7 @@ class Service
     public function __toString(): string
     {
         return $this->getName();
-    }   
+    }
 
     /**
      * @return int

@@ -64,9 +64,9 @@ class ServiceController extends AbstractController
 
         $services = $this->serviceFetcher->findAllByCategoryId((int)$categoryId);
 
-        $bookServiceId ? $bookService = $this->serviceFetcher->getById($bookServiceId) : $bookService = null;
+        $bookServiceId !== null ? $bookServiceExist = true : $bookServiceExist = false;
 
-        return $this->json(['services' => $services]);
+        return $this->json(['services' => $services, 'bookServiceExist' => $bookServiceExist]);
 //        return $this->render('app/main/filters/_servicesSelectorByCategory.html.twig', [
 //            'services' => $services,
 //            'bookService' => $bookService

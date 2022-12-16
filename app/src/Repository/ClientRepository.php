@@ -35,7 +35,7 @@ class ClientRepository
     {
         /** @var Client $client */
         if (!$client = $this->repo->find($id)) {
-            throw new EntityNotFoundException('Клиент не найден');
+            throw new EntityNotFoundException('Клиент не найден. id: '. $id);
         }
         return $client;
     }

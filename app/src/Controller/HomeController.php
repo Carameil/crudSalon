@@ -39,6 +39,7 @@ class HomeController extends AbstractController
             'categories' => $categories,
             'employees' => $employees,
             'bookService' => $bookService,
+            'bookServiceId' => $serviceId,
             'bookCategory' => $bookCategory,
             'employeesByBookService' => $employeesByBookService,
         ]);

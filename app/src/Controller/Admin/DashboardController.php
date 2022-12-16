@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 
+use App\Entity\Category;
 use App\Entity\Client;
 use App\Entity\Employee;
 use App\Entity\Material;
@@ -52,26 +53,27 @@ class DashboardController extends AbstractDashboardController
     public function configureDashboard(): Dashboard
     {
         return Dashboard::new()
-            ->setTitle('Salon Overflow Admin');
+            ->setTitle('Администрирование салона');
     }
 
     public function configureMenuItems(): iterable
     {
-        yield MenuItem::linkToDashboard('Dashboard', 'fa fa-dashboard');
+        yield MenuItem::linkToDashboard('Главная', 'fa fa-dashboard');
 
-        yield MenuItem::section('Person cases');
-        yield MenuItem::linkToCrud('Client', 'fa-solid fa-person', Client::class);
-        yield MenuItem::linkToCrud('Employee', 'fa-solid fa-user-nurse', Employee::class);
-        yield MenuItem::linkToCrud('Position', 'fa-solid fa-image-portrait', Position::class);
+        yield MenuItem::section('Персоналии');
+        yield MenuItem::linkToCrud('Клиенты', 'fa-solid fa-person', Client::class);
+        yield MenuItem::linkToCrud('Сотрудники', 'fa-solid fa-user-nurse', Employee::class);
+        yield MenuItem::linkToCrud('Должности', 'fa-solid fa-image-portrait', Position::class);
 
-        yield MenuItem::section('Work cases');
-        yield MenuItem::linkToCrud('Visit', 'fa fa-eye', Visit::class);
-        yield MenuItem::linkToCrud('Service', 'fa-solid fa-rectangle-list', Service::class);
-        yield MenuItem::linkToCrud('Material', 'fa fa-truck-fast', Material::class);
-        yield MenuItem::linkToCrud('MaterialsServices', 'fa fa-recycle', MaterialsServices::class);
+        yield MenuItem::section('Рабочие кейсы');
+        yield MenuItem::linkToCrud('Посещения', 'fa fa-eye', Visit::class);
+        yield MenuItem::linkToCrud('Категории', 'fa fa-eye', Category::class);
+        yield MenuItem::linkToCrud('Услуги', 'fa-solid fa-rectangle-list', Service::class);
+        yield MenuItem::linkToCrud('Материалы', 'fa fa-truck-fast', Material::class);
+        yield MenuItem::linkToCrud('Материалы Услуг', 'fa fa-recycle', MaterialsServices::class);
 
-        yield MenuItem::section('Security info');
-        yield MenuItem::linkToCrud('User', 'fa fa-user', User::class);
+        yield MenuItem::section('Информация по пользователям');
+        yield MenuItem::linkToCrud('Пользователи', 'fa fa-user', User::class);
     }
 
     public function configureActions(): Actions

@@ -12,14 +12,14 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityNotFoundException;
 use Exception;
 
-readonly class Handler
+class Handler
 {
     public function __construct(
-        private MaterialService         $materialService,
-        private MaterialServicesService $materialServicesService,
-        private VisitRepository         $visitRepository,
-        private EntityManagerInterface  $entityManager,
-        private Flusher                 $flusher,
+        private readonly MaterialService                 $materialService,
+        private readonly MaterialServicesService         $materialServicesService,
+        private readonly VisitRepository                 $visitRepository,
+        private readonly EntityManagerInterface          $entityManager,
+        private readonly Flusher                         $flusher,
     ) {
     }
 

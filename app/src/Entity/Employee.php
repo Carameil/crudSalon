@@ -20,11 +20,23 @@ class Employee extends User
     #[ORM\ManyToOne(inversedBy: 'employees')]
     private Position $position;
 
-    public function __construct(string $firstName, $lastName, string $email, string $phone, $middleName = null)
+    public function __construct(string $firstName, string $lastName, string $email, string $middleName = null)
     {
         parent::__construct($firstName, $lastName, $email, $middleName);
-        $this->phone = $phone;
-        $this->addRole(self::ROLE_EMPLOYEE);
+    }
+
+    public static function create(
+        string $firstName,
+        string $lastName,
+        string $email,
+        string $passwordHash = null,
+        string $middleName = null): self
+    {
+        $employee = new static($firstName, $lastName, $email, $middleName);
+        $employee->addRole(self::ROLE_EMPLOYEE);
+        $employee->setPassword($passwordHash);
+
+        return $employee;
     }
 
     public function getType(): string

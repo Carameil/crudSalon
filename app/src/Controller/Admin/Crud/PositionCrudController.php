@@ -24,26 +24,22 @@ class PositionCrudController extends AbstractCrudController
         return Position::class;
     }
 
-//    public function configureCrud(Crud $crud): Crud
-//    {
-//        return $crud
-//            ->setFormThemes(['app/admin/field/money.html.twig', '@EasyAdmin/crud/form_theme.html.twig'])
-//            ;
-//    }
+    public function configureCrud(Crud $crud): Crud
+    {
+        return $crud
+            ->setEntityLabelInPlural('Должности')
+            ->setEntityLabelInSingular('Должность');
+    }
 
     public function configureFields(string $pageName): iterable
     {
 
         return [
             IdField::new('id')->hideOnForm(),
-            TextField::new('name'),
+            TextField::new('name')->setLabel('Имя'),
             \EasyCorp\Bundle\EasyAdminBundle\Field\MoneyField::new('salary')
                 ->setCurrency('RUB')
-//                ->setNumDecimals(2)
-//                ->setFormTypeOptions([
-//                    'block_name' => 'number_field',
-//                ])
-
+                ->setLabel('Зарплата')
         ];
     }
 

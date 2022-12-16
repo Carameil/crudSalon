@@ -1,4 +1,4 @@
-<table align="center" id="myTable">
+<table align="center" id="services">
     <tr class="header">
         <th style="width:30%;">Название</th>
         <th style="width:50%;">Описание</th>
@@ -11,7 +11,9 @@
             <td>{{ service.description }}</td>
             <td>{{ price(service.price) }}</td>
             <td>
-                <button type="button" class="btn btn-primary">Записаться</button>
+                <a href="{{ path('app_booking', {'serviceId' : service.id}) }}">
+                    <button type="button" class="btn btn-primary">Записаться</button>
+                </a>
             </td>
         </tr>
     {% endfor %}

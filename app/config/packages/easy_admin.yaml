@@ -1,0 +1,5 @@
+easy_admin:
+  entities:
+    Client:
+      list:
+        actions: ['fillData']

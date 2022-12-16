@@ -23,7 +23,8 @@ class Form extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Command::class,
-            'csrf_token_id' => 'csrf_token'
+            'csrf_token_id' => 'csrf_token',
+            'allow_extra_fields' => true,
         ]);
     }
 

@@ -61,7 +61,7 @@ class User extends AbstractedUser implements PasswordAuthenticatedUserInterface,
     #[ORM\Column(type: "json")]
     protected array $roles = [];
 
-    protected function __construct($firstName, $lastName, string $email, $middleName = null)
+    protected function __construct(string $firstName, string $lastName, string $email, string $middleName = null)
     {
         $this->firstName = $firstName;
         $this->lastName = $lastName;
@@ -70,7 +70,7 @@ class User extends AbstractedUser implements PasswordAuthenticatedUserInterface,
         $this->status = Status::STATUS_ACTIVE->value;
     }
 
-    final public static function create(
+    public static function create(
         string $firstName,
         string $lastName,
         string $email,
@@ -79,9 +79,8 @@ class User extends AbstractedUser implements PasswordAuthenticatedUserInterface,
     ): self
     {
         $user = new self($firstName, $lastName, $email, $middleName);
-        $user->email = $email;
         $user->passwordHash = $passwordHash;
-        $user->addRole(self::ROLE_ADMIN);
+//        $user->addRole(self::ROLE_ADMIN);
         return $user;
     }
 

@@ -440,7 +440,7 @@
                 </div>
                 <div class="col-md-6 appointment pl-md-5 ftco-animate">
                     <h3 class="mb-3">Appointments</h3>
-                    <form action="{{ path('app_appointment') }}" method="POST" enctype="multipart/form-data"
+                    <form action="{{ path('app_appointment') }}" id="idForm" method="POST" enctype="multipart/form-data"
                           class="appointment-form">
                         <input type="hidden" name="_token" value="{{ csrf_token('csrf_token') }}">
                         <div class="row form-group d-flex">
@@ -452,10 +452,10 @@
                                                     selected>{{ bookCategory[0].name }}</option>
                                         {% else %}
                                             <option value="" disabled selected>Выберите категорию услуг</option>
-                                        {% for category in categories %}
-                                            <option style="color: black"
-                                                    value="{{ category.id }}">{{ category.name }}</option>
-                                        {% endfor %}
+                                            {% for category in categories %}
+                                                <option style="color: black"
+                                                        value="{{ category.id }}">{{ category.name }}</option>
+                                            {% endfor %}
                                         {% endif %}
                                     </select>
                                 </div>
@@ -467,8 +467,19 @@
                                         {% if (bookService) %}
                                             <option value="{{ bookService[0].id }}" disabled
                                                     selected>{{ bookService[0].name }}</option>
+                                        {% else %}
+                                            <option value="" disabled selected>Выберите услугу</option>
                                         {% endif %}
-                                        <option value="" disabled selected>Выберите услугу</option>
+                                        {#                                        {% if (bookService) %} #}
+                                        {#                                            <option value="{{ bookService[0].id }}" disabled #}
+                                        {#                                                    selected>{{ bookService[0].name }}</option> #}
+                                        {#                                        {% else %} #}
+                                        {#                                            <option value="" disabled selected>Выберите услугу</option> #}
+                                        {#                                            {% for service in services %} #}
+                                        {#                                                <option style="color: black" #}
+                                        {#                                                        value="{{ service.id }}">{{ service.name }}</option> #}
+                                        {#                                            {% endfor %} #}
+                                        {#                                        {% endif %} #}
                                     </select>
                                 </div>
                             </div>
@@ -477,15 +488,16 @@
                         <div class="row form-group d-flex">
                             <div class="col-md-6">
                                 <div class="employeesContainer">
-                                    {% if (employeesByBookService) %}
-                                        <select class="form-control" name="employeeId" id="employeesDropdown" disabled>
-                                            <option value=""> Выберите мастера</option>
+
+                                    <select class="form-control" name="employeeId" id="employeesDropdown" disabled>
+                                        <option value=""> Выберите мастера</option>
+                                        {% if employeesByBookService is null %}
                                             {% for employee in employeesByBookService %}
                                                 <option style="color: black"
                                                         value="{{ employee.id }}">{{ employee.fullname }}</option>
                                             {% endfor %}
-                                        </select>
-                                    {% endif %}
+                                        {% endif %}
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -507,7 +519,8 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <input type="submit" value="Записаться" class="btn btn-white btn-outline-white py-3 px-4">
+                            <input type="submit" id="subButton" value="Записаться"
+                                   class="btn btn-white btn-outline-white py-3 px-4">
                         </div>
                     </form>
                 </div>
@@ -518,29 +531,36 @@
     <script src="https://code.jquery.com/jquery-3.6.1.js"
             integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI=" crossorigin="anonymous"></script>
     <script type="text/javascript">
+        let bookServiceExist = false;
         $(document).ready(function () {
             $(document).on("change", "#categoriesDropdown", function (event) {
                 event.preventDefault();
                 var value = $('#categoriesDropdown option:selected').val();
                 $.ajax({
-                    url: '{{ (path('app_services_selector_by_category')) }}',
+                    url: '{{ (path('app_services_selector_by_category', {'bookServiceId' : bookServiceId})) }}',
                     type: "POST",
                     data: {
                         "categoryId": value,
                     },
                     success: function (data) {
+                        console.log(data['bookServiceExist'])
                         let services = [];
                         data['services'].map((service) =>
                             services.push({id: service.id, name: service.name}));
                         let $mySelect = $('#servicesDropdown');
-                        $.each(services, function (key, value) {
-                            let $option = $("<option/>", {
-                                value: value.id,
-                                text: value.name
-                            }).css('color', 'black');
-                            $mySelect.append($option);
-                        });
-                            $('#servicesDropdown').removeAttr('disabled');
+                        if (data['bookServiceExist'] === false) {
+                            $.each(services, function (key, value) {
+                                let $option = $("<option/>", {
+                                    value: value.id,
+                                    text: value.name
+                                }).css('color', 'black');
+                                $mySelect.append($option);
+                            });
+
+                        } else {
+                            bookServiceExist = true;
+                        }
+                        $mySelect.removeAttr('disabled');
                     },
                     error: function (err) {
                         console.log(err.statusText);
@@ -549,22 +569,56 @@
 
                 return false;
             });
-            $( "#categoriesDropdown" ).trigger( "change" );
+            $("#categoriesDropdown").trigger("change");
         });
+
+        {# $(document).ready(function () { #}
+        {#    $(document).on("change", "#servicesDropdown", function (event) { #}
+        {#        event.preventDefault(); #}
+        {#        var value = $('#servicesDropdown option:selected').val(); #}
+        {#        $.ajax({ #}
+        {#            url: '{{ (path('app_employees_selector_by_service')) }}', #}
+        {#            type: "POST", #}
+        {#            data: { #}
+        {#                "serviceId": value, #}
+        {#            }, #}
+        {#            success: function (data) { #}
+        {#                console.log(data); #}
+        {#                $('.employeesContainer').html(data); #}
+        {#            }, #}
+        {#            error: function (err) { #}
+        {#                console.log(err.statusText); #}
+        {#            } #}
+        {#        }); #}
+
+        {#        return false; #}
+        {#    }) #}
+        {# }); #}
 
         $(document).ready(function () {
             $(document).on("change", "#servicesDropdown", function (event) {
                 event.preventDefault();
-                var value = $(this).val();
+                var value = $('#servicesDropdown option:selected').val();
                 $.ajax({
                     url: '{{ (path('app_employees_selector_by_service')) }}',
                     type: "POST",
                     data: {
-                        "serviceId": value,
+                        "serviceId": parseInt(value),
                     },
                     success: function (data) {
-                        console.log(data);
-                        $('.employeesContainer').html(data);
+                        console.log(data['employees'])
+                        let employees = [];
+                        data['employees'].map((employee) =>
+                            employees.push({id: employee.id, fullname: employee.fullname}));
+                        let $mySelect = $('#employeesDropdown');
+                        $.each(employees, function (key, value) {
+                            let $option = $("<option/>", {
+                                value: value.id,
+                                text: value.fullname
+                            }).css('color', 'black');
+                            $mySelect.append($option);
+                        });
+                        $mySelect.removeAttr('disabled');
                     },
                     error: function (err) {
                         console.log(err.statusText);
@@ -572,7 +626,8 @@
                 });
 
                 return false;
-            })
+            });
+            $("#servicesDropdown").trigger("change");
         });
 
         let employeeId;
@@ -621,6 +676,31 @@
                 return false;
             })
         });
+
+        // if(bookServiceExist) {
+        $("#idForm").submit(function (e) {
+
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+
+            var form = $(this);
+            var actionUrl = form.attr('action');
+
+            $.ajax({
+                type: "POST",
+                url: actionUrl,
+                data: form.serialize() + '&serviceId=' + $('#servicesDropdown option:selected').val(),
+                success: function (data) {
+                    if (data.redirect) {
+                        window.location.href = 'http://salon.loc' + data.redirect;
+                        window.location.reload();
+                    } else {
+                        return false;
+                    }
+                }
+            });
+
+        });
+        // }
 
     </script>
 {% endblock %}

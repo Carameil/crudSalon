@@ -19,12 +19,24 @@ class Client extends User
     #[ORM\OneToMany(mappedBy: 'client', targetEntity: Visit::class)]
     private Collection $visits;
 
-    public function __construct(string $firstName, $lastName, string $email, string $phone, $middleName = null)
+    public function __construct(string $firstName, string $lastName, string $email, string $middleName = null)
     {
         parent::__construct($firstName, $lastName, $email, $middleName);
-        $this->phone = $phone;
-        $this->addRole(self::ROLE_USER);
         $this->visits = new ArrayCollection();
+    }
+
+    public static function create(
+        string $firstName,
+        string $lastName,
+        string $email,
+        string $passwordHash = null,
+        string $middleName = null): self
+    {
+        $client = new static($firstName, $lastName, $email, $middleName);
+        $client->setPassword($passwordHash);
+        $client->addRole(self::ROLE_USER);
+
+        return $client;
     }
 
     public function getPhone(): ?string
