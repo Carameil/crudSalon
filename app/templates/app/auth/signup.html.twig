@@ -8,9 +8,9 @@
                     <div class="card-body p-4">
                         {% include 'components/_flashes.html.twig' %}
 
-                        <h1>Sign Up</h1>
+                        <h1>Регистрация</h1>
 
-                        <p class="text-muted">Create your account</p>
+                        <p class="text-muted">Создайте Ваш аккаунт</p>
 
                         {{ form_start(form) }}
 
@@ -55,7 +55,7 @@
                                     <i class="icon-lock"></i>
                                 </span>
                             </div>
-                            {{ form_widget(form.plainPassword, {'attr': {'placeholder': 'Password'}}) }}
+                            {{ form_widget(form.plainPassword, {'attr': {'placeholder': 'Пароль'}}) }}
                             {{ form_errors(form.plainPassword) }}
                         </div>
 

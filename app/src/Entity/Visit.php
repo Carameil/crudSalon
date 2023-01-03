@@ -10,7 +10,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity]
 #[UniqueEntity(fields: ['date_time', 'client_id'], message: 'Данная запись уже существует')]
-#[ORM\UniqueConstraint(name: 'date_time_client_ui', columns: ['date_time', 'client_id'])]
+#[ORM\UniqueConstraint(name: 'date_time_client_ui', columns: ['date_time', 'client_id', 'service_status'])]
 class Visit
 {
     use TimestampableEntity;

@@ -17,7 +17,7 @@ class EmployeeFetcher
     public function findAll(): array
     {
         $stmt = $this->connection->createQueryBuilder()
-            ->select("e.id, CONCAT_WS(' ', u.last_name, u.first_name, u.middle_name) as fullName")
+            ->select("e.id, CONCAT_WS(' ', u.first_name, u.last_name, u.middle_name) as fullName")
             ->from('employee', 'e')
             ->innerJoin('e', '"user"', 'u', 'e.id = u.id')
             ->orderBy('fullName');
@@ -32,7 +32,7 @@ class EmployeeFetcher
     {
         $stmt = $this->connection->createQueryBuilder();
 
-        $stmt->select("e.id, CONCAT_WS(' ', u.last_name, u.first_name, u.middle_name) as fullName")
+        $stmt->select("e.id, CONCAT_WS(' ', u.first_name, u.last_name, u.middle_name) as fullName")
             ->from('employee', 'e')
             ->innerJoin('e', '"user"', 'u', 'e.id = u.id')
             ->innerJoin('e', '"service"', 's', 'e.position_id = s.position_id')

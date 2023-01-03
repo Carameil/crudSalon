@@ -77,9 +77,9 @@ class ClientCrudController extends UserCrudController
         return parent::configureFilters($filters, true);
     }
 
-    public function configureActions(Actions $actions): Actions
+    public function configureActions(Actions $actions, ?bool $fromChild = false): Actions
     {
-        return $actions;
+        return parent::configureActions($actions, true);
     }
 
 }

@@ -7,15 +7,14 @@ use App\Repository\UserRepository;
 use App\Service\Doctrine\Flusher;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\PasswordHasher\PasswordHasherInterface;
 
-class Handler
+readonly class Handler
 {
     public function __construct(
-        private readonly UserRepository $users,
-        private readonly UserPasswordHasherInterface $hasher,
-        private readonly Flusher $flusher,
+        private UserRepository          $users,
+        private PasswordHasherInterface $hasher,
+        private Flusher                 $flusher,
     )
     {
     }
@@ -32,14 +31,14 @@ class Handler
             throw new \DomainException('Пользователь с таким email существует');
         }
 
-        $client = new Client(
+        $client = Client::create(
             $command->firstName,
             $command->lastName,
             $email,
-            $command->phone,
+            $this->hasher->hash($command->plainPassword),
             $command->middleName
         );
-        $client->setPassword($this->hasher->hashPassword($client, $command->plainPassword));
+        $client->setPhone($command->phone);
 
         $this->users->save($client);
 

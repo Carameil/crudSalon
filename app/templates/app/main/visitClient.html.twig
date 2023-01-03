@@ -37,10 +37,10 @@
             <div class="row">
                 <div class="col-md-2">{{ form_widget(form.fullName) }}</div>
                 <div class="col-md-2">{{ form_widget(form.service) }}</div>
-                <div class="col-md-2">{{ form_widget(form.dateTime) }}</div>
+                <div class="col-md-2">{{ form_widget(form.date) }}</div>
                 <div class="col-md-2">
                     <button type="submit" class="btn btn-primary">Фильтровать</button>
-                    <a href="{{ path('app_employee_records') }}" class="btn btn-outline-secondary">Сбросить</a>
+                    <a href="{{ path('app_client_records') }}" class="btn btn-outline-secondary">Сбросить</a>
                 </div>
             </div>
             {{ form_end(form) }}

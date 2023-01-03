@@ -67,6 +67,9 @@ class User extends AbstractedUser implements PasswordAuthenticatedUserInterface,
         $this->lastName = $lastName;
         $this->middleName = $middleName;
         $this->email = $email;
+        /*
+         * todo replace to Status::WAIT->value
+         * */
         $this->status = Status::STATUS_ACTIVE->value;
     }
 

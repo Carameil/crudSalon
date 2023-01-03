@@ -11,36 +11,39 @@
                         <div class="row g-0">
                             <div class="col-lg-6">
                                 <div class="card-body p-md-3 mx-md-4">
-                                    {% include 'components/_flashes.html.twig' %}
                                     <div class="text-center">
                                         <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/lotus.webp"
                                              style="width: 185px;" alt="logo">
-                                        <h4 class="mt-1 mb-5 pb-1">We are The Lotus Team</h4>
+                                        <h4 class="mt-1 mb-5 pb-1">Lotus</h4>
                                     </div>
 
-                                    {% if error %}
-                                        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-                                    {% endif %}
-
+                                    {#                                    {% if error %} #}
+                                    {#                                        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div> #}
+                                    {#                                    {% endif %} #}
+                                    {% include 'components/_flashes.html.twig' %}
                                     <form method="post">
 
-                                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                                        <input type="hidden" name="_csrf_token"
+                                               value="{{ csrf_token('authenticate') }}">
 
-                                        <p>Please login to your account</p>
+                                        <p>Поэалуйста, войдите в свой аккаунт</p>
                                         <div class="form-floating mb-3">
-                                            <input type="email" name="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-                                            <label for="floatingInput">Email address</label>
+                                            <input type="email" name="email" class="form-control" id="floatingInput"
+                                                   placeholder="name@example.com">
+                                            <label for="floatingInput">Email адресс</label>
                                         </div>
 
                                         <div class="form-floating">
-                                            <input type="password" name="password" class="form-control" id="floatingPassword" placeholder="Password">
-                                            <label for="floatingPassword">Password</label>
+                                            <input type="password" name="password" class="form-control"
+                                                   id="floatingPassword" placeholder="Password">
+                                            <label for="floatingPassword">Пароль</label>
                                         </div>
 
                                         <div class="form-floating">
                                             <div class="form-check-label" style="margin-top: 10px; margin-bottom: 10px">
                                                 <label>
-                                                    <input type="checkbox" name="_remember_me"> <span class="text-muted">Remember me</span>
+                                                    <input type="checkbox" name="_remember_me"> <span
+                                                            class="text-muted">Запомнить меня</span>
                                                 </label>
                                             </div>
                                         </div>
@@ -48,15 +51,17 @@
                                         <div class="text-center pt-1 mb-5 pb-1">
                                             <button class="btn btn-primary btn-block fa-lg gradient-custom-2 mb-3"
                                                     style="height: 40px"
-                                                    type="submit">Log in
+                                                    type="submit">Войти
                                             </button>
-                                            <a class="text-muted" href="#!">Forgot password?</a>
+                                            <a class="text-muted" href="#!">Забыли пароль?</a>
                                         </div>
 
                                         <div class="d-flex align-items-center justify-content-center pb-4">
-                                            <p class="mb-0 me-2">Don't have an account?</p>
+                                            <p class="mb-0 me-2">Нет аккаунта?</p>
                                             <a href="{{ path('app_signup') }}">
-                                                <button type="button" class="btn btn-outline-danger">Create new</button>
+                                                <button type="button" class="btn btn-outline-danger">
+                                                    Зарегистрироваться
+                                                </button>
                                             </a>
                                         </div>
 
@@ -66,10 +71,12 @@
                             </div>
                             <div class="col-lg-6 d-flex align-items-center gradient-custom-2">
                                 <div class="text-white px-3 py-4 p-md-5 mx-md-4">
-                                    <h4 class="mb-4">We are more than just a company</h4>
-                                    <p class="small mb-0">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                                        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                                        exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                                    <h4 class="mb-4">Мы больше, чем салон красоты</h4>
+                                    <p class="small mb-0">Наши мастера создадут настоящий шедевр, будь то простая или
+                                        самая модная стрижка, свадебная или вечерняя укладка — все это и другое будет
+                                        выглядеть не только безупречно, но и естественно! Чтобы добиться яркого цвета и
+                                        красивой прически, мы уделяем огромное внимание здоровью волос, проводя лечение
+                                        кожи головы и восстановительные процедуры по уникальным методикам.</p>
                                 </div>
                             </div>
                         </div>

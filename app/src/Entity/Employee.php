@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\User\Enum\Status;
 use App\Entity\User\User;
 use App\Repository\EmployeeRepository;
 use Doctrine\ORM\Mapping as ORM;
@@ -74,5 +75,10 @@ class Employee extends User
     public function setAddress(?string $address): void
     {
         $this->address = $address;
+    }
+
+    public function remove(): void
+    {
+        $this->setStatus(Status::STATUS_BLOCKED->value);
     }
 }

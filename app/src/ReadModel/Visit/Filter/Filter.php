@@ -10,5 +10,5 @@ class Filter
 {
     public ?string $fullName = null;
     public ?string $service = null;
-    public ?DateTimeInterface $dateTime = null;
+    public ?DateTimeInterface $date = null;
 }

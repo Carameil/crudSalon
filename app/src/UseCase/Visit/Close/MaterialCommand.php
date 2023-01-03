@@ -10,7 +10,6 @@ class MaterialCommand
     public int $materialId;
     #[Assert\NotBlank]
     public int $quantity;
-
     #[Assert\NotBlank]
     public string $unit;
 

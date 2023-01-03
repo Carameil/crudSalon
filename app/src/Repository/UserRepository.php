@@ -57,6 +57,11 @@ class UserRepository implements UserLoaderInterface
         return $user;
     }
 
+    public function findByEmail(string $email): ?User
+    {
+        return $this->repo->findOneBy(['email' => $email]);
+    }
+
     /**
      * @throws NonUniqueResultException
      * @throws NoResultException

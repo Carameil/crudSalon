@@ -10,32 +10,44 @@
 
     {% block body %}
         <div class="card-body p-4">
-        {% include 'components/_flashes.html.twig' %}
+            {% include 'components/_flashes.html.twig' %}
 
-        <h1 style="text-align: center">Закрытие записи</h1>
+            <h1 style="text-align: center">Закрытие записи</h1>
 
-        <p style="text-align: center" class="text-muted">Введите информацию по услуге</p>
+            <p style="text-align: center" class="text-muted">Введите информацию по услуге</p>
 
-        {{ form_start(form) }}
-        {# render each row and field in the embedded form, in this example it's rendering the experience (Exp) fiels as rows #}
-        <div style="text-align: center; margin-left: 17%" class="col-sm-8 col-sm-offset-2" id="exp_list"
-             data-prototype="{{ form_widget(form.materials.vars.prototype)|e('html_attr') }}">
-            {% for material in form.materials %}
-                <div class="panel panel-warning">
-{#                    <div class="panel-heading">#}
-{#                        <strong>{{ material.vars.value.title }}</strong>#}
-{#                    </div>#}
-                    <div class="panel-body">
-                        {{ form_row(material) }}
+            {{ form_start(form) }}
+            {# render each row and field in the embedded form, in this example it's rendering the experience (Exp) fiels as rows #}
+            <div style="text-align: center; margin-left: 17%" class="col-sm-8 col-sm-offset-2" id="exp_list"
+                 data-prototype="{{ form_widget(form.materials.vars.prototype)|e('html_attr') }}">
+                {% for material in form.materials %}
+                    <div class="panel panel-warning">
+                        <div class="panel-body">
+                            {{ form_row(material) }}
+                        </div>
                     </div>
-                </div>
-            {% endfor %}
+                {% endfor %}
+            </div>
+
+            <a href="{{ path('app_visit_close', {'id' : visit.id}) }}">
+                <button style="position: relative;left: 50%;transform: translate(-50%, 0); margin-top: 5%; margin-bottom: 10%"
+                        class="btn btn-success">Закрыть запись
+                </button>
+            </a>
+            {{ form_end(form) }}
         </div>
 
-        <a href="{{ path('app_visit_close', {'id' : visit.id}) }}">
-            <button style="position: relative;left: 50%;transform: translate(-50%, 0); margin-top: 5%; margin-bottom: 10%"
-                    class="btn btn-success">Закрыть запись
-            </button>
-        </a>
-        {{ form_end(form) }}
+        <script src="https://code.jquery.com/jquery-3.6.1.js"
+                integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI=" crossorigin="anonymous"></script>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $(document).on("change", '#exp_list select', function (event) {
+            event.preventDefault();
+            let option = $(this).find(':selected').data('unit');
+            $( this ).parent().parent().find('input[name$="[unit]"]').attr('value', option);
+            return true;
+        })
+    });
+</script>
     {% endblock %}

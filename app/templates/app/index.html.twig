@@ -631,9 +631,9 @@
         });
 
         let employeeId;
+        let selectedDate;
         $(document).ready(function () {
             $(document).on("change", "#employeesDropdown", function (event) {
-                //$('#appointment_date').datepicker('setDate', null);
                 employeeId = $(this).val();
                 $("#appointment_date").removeAttr('disabled');
 
@@ -645,6 +645,7 @@
             $('#appointment_date').on("changeDate", function (event) {
                 event.preventDefault();
                 var value = $(this).val();
+
                 $.ajax({
                     url: '{{ (path('app_employee_occupation')) }}',
                     type: "POST",
@@ -656,9 +657,14 @@
                         $("#appointment_time").removeAttr('disabled');
                         let timeRange = [];
                         let workingHours = [];
-                        console.log(data);
                         Object.values(data['occupation']).forEach(element => timeRange.push(Object.values(element)))
                         workingHours = Object.values(data['workingHours'])
+
+                        var dateNow = new Date(Date.now());
+                        if(value === dateNow.toISOString().split('T')[0]){
+                            timeRange.push([workingHours['0'], dateNow.getHours() + ':' + dateNow.getMinutes()]);
+                        }
+
                         $('#appointment_time').timepicker('remove');
                         $('#appointment_time').timepicker({
                             'showMeridian': false,

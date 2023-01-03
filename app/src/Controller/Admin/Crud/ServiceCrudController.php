@@ -2,17 +2,25 @@
 
 namespace App\Controller\Admin\Crud;
 
+use App\Admin\Filters\CategoryFilter;
 use App\Entity\Service;
+use App\Entity\User\Enum\Status;
+use App\ReadModel\CategoryFetcher;
 use App\Service\FileUploader;
+use Doctrine\DBAL\Exception;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\MoneyField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\ArrayFilter;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -20,6 +28,10 @@ use App\UseCase\Admin\Import;
 
 class ServiceCrudController extends AbstractCrudController
 {
+    public function __construct(private readonly CategoryFetcher $categoryFetcher)
+    {
+    }
+
     public static function getEntityFqcn(): string
     {
         return Service::class;
@@ -36,10 +48,24 @@ class ServiceCrudController extends AbstractCrudController
         return [
             IdField::new('id'),
             TextField::new('name')->setLabel('Название услуги'),
+//            AssociationField::new('position')->setLabel('Исполнитель')
+//                ->setCrudController(PositionCrudController::class),
             MoneyField::new('price')->setCurrency('RUB')->setLabel('Цена'),
             TextareaField::new('description')->setLabel('Описание'),
             IntegerField::new('avg_time')->setLabel('Время выполнения услуги')->setHelp('Указывать время только в Минутах'),
         ];
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function configureFilters(Filters $filters): Filters
+    {
+        $filters
+            ->add(CategoryFilter::new('category', $this->getCategories())
+                ->setLabel('Категория'));
+
+        return $filters;
     }
 
     public function configureActions(Actions $actions): Actions
@@ -78,5 +104,18 @@ class ServiceCrudController extends AbstractCrudController
         return $this->render('app/admin/import.html.twig', [
             'form' => $form->createView()
         ]);
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function getCategories(): array
+    {
+        $categories = [];
+        foreach ($this->categoryFetcher->findAll() as $categoryRow) {
+            $categories[$categoryRow['name']] = $categoryRow['id'];
+        }
+
+        return $categories;
     }
 }

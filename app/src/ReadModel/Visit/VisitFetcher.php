@@ -75,7 +75,7 @@ class VisitFetcher
         $stmt->select("
         v.id,
         v.client_id,
-        CONCAT_WS(' ', u.last_name, u.first_name, u.middle_name) as full_name,
+        CONCAT_WS(' ', u.first_name, u.last_name, u.middle_name) as full_name,
         s.name as service_name,
         v.date_time as date_time
         ")
@@ -84,6 +84,7 @@ class VisitFetcher
             ->innerJoin('v', '"user"', 'u', 'v.client_id = u.id')
             ->andWhere('v.employee_id = :employeeId')
             ->andWhere('v.service_status = :serviceStatus')
+            ->andWhere('v.date_time::timestamp::date >= CURRENT_DATE')
             ->setParameter('employeeId', $employeeId)
             ->setParameter('serviceStatus', ServiceStatus::ACTIVE->value);
 
@@ -103,7 +104,7 @@ class VisitFetcher
         $stmt = $this->connection->createQueryBuilder();
         $stmt->select("
         v.id,
-        CONCAT_WS(' ', u.last_name, u.first_name, u.middle_name) as full_name,
+        CONCAT_WS(' ', u.first_name, u.last_name, u.middle_name) as full_name,
         s.name as service_name,
         v.date_time as date_time
         ")
@@ -112,6 +113,7 @@ class VisitFetcher
             ->innerJoin('v', '"user"', 'u', 'v.employee_id = u.id')
             ->andWhere('v.client_id = :clientId')
             ->andWhere('v.service_status = :serviceStatus')
+            ->andWhere('v.date_time >= CURRENT_TIMESTAMP')
             ->setParameter('clientId', $clientId)
             ->setParameter('serviceStatus', ServiceStatus::ACTIVE->value);
 
@@ -138,9 +140,9 @@ class VisitFetcher
             $stmt->setParameter('serviceName', '%' . mb_strtolower($filter->service) . '%');
         }
 
-        if ($filter->dateTime) {
-            $stmt->andWhere($stmt->expr()->eq("v.date_time", ':dateTime'));
-            $stmt->setParameter('dateTime', $filter->dateTime->format('Y-m-d H:i:s'));
+        if ($filter->date) {
+            $stmt->andWhere($stmt->expr()->eq("v.date_time::timestamp::date", ':dateTime'));
+            $stmt->setParameter('dateTime', $filter->date->format('Y-m-d'));
         }
     }
 }

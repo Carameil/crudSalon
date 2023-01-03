@@ -25,6 +25,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\TextFilter;
+use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use ReflectionClass;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
@@ -39,7 +40,10 @@ use App\UseCase\Admin\Import;
 class UserCrudController extends AbstractCrudController
 {
 
-    public function __construct(private readonly PasswordHasherInterface $passwordHasher)
+    public function __construct(
+        private readonly PasswordHasherInterface $passwordHasher,
+        private readonly AdminUrlGenerator $adminUrlGenerator
+    )
     {
     }
 
@@ -118,17 +122,21 @@ class UserCrudController extends AbstractCrudController
         return $filters;
     }
 
-    public function configureActions(Actions $actions): Actions
+    public function configureActions(Actions $actions, ?bool $fromChild = false): Actions
     {
-        $fillDataAction = Action::new('Импорт')
-            ->linkToCrudAction('fillData')
-            ->setTemplatePath('app/admin/action.html.twig')
-            ->addCssClass('btn btn-primary')
-            ->setIcon('fa-solid fa-file-import')
-            ->createAsGlobalAction()
-            ->displayAsButton();
+        if(!$fromChild) {
+            $fillDataAction = Action::new('Импорт')
+                ->linkToCrudAction('fillData')
+                ->setTemplatePath('app/admin/action.html.twig')
+                ->addCssClass('btn btn-primary')
+                ->setIcon('fa-solid fa-file-import')
+                ->createAsGlobalAction()
+                ->displayAsButton();
+            $actions->add(Crud::PAGE_INDEX, $fillDataAction);
+        }
+
         return parent::configureActions($actions)
-            ->add(Crud::PAGE_INDEX, $fillDataAction);
+            ->remove(Crud::PAGE_INDEX, Action::DELETE);
     }
 
     public function createNewFormBuilder(EntityDto $entityDto, KeyValueStore $formOptions, AdminContext $context): FormBuilderInterface

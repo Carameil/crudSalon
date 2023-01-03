@@ -8,11 +8,14 @@ use Doctrine\DBAL\Exception;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class MaterialType extends AbstractType
 {
+    private array $units;
+
     public function __construct(
         private readonly MaterialFetcher $materialFetcher
     )
@@ -31,7 +34,19 @@ class MaterialType extends AbstractType
             $choices[$material['name']] = $material['id'];
         }
 
+        $this->units = $this->getMaterialsUnits($materials);
+
         return $choices;
+    }
+
+    private function getMaterialsUnits(array $materials): array
+    {
+        $units = [];
+        foreach ($materials as $row) {
+            $units[$row['id']] = $row['unit'];
+        }
+
+        return $units;
     }
 
     /**
@@ -46,14 +61,20 @@ class MaterialType extends AbstractType
         $builder
             ->add('materialId', ChoiceType::class, [
                 'label' => 'Материал',
-                'choices' => $this->getMaterialChoices()
+                'choices' => $this->getMaterialChoices(),
+                'choice_attr' => function($choice, $key, $value) {
+                    return ['data-unit' => $this->units[$value]];
+                },
+                'placeholder' => ''
             ])
             ->add('quantity', IntegerType::class, [
                 'label' => 'Количество'
             ])
-            ->add('unit', ChoiceType::class, [
+            ->add('unit', TextType::class, [
                 'label' => 'Единица измерения',
-                'choices' => Unit::arrayKeyByKey()
+                'attr' => [
+                    'readonly' => 'true',
+                ]
             ]);
     }
 

@@ -54,6 +54,12 @@
                                     console.log(data);
                                     Object.values(data['occupation']).forEach(element => timeRange.push(Object.values(element)))
                                     workingHours = Object.values(data['workingHours'])
+
+                                    var dateNow = new Date(Date.now());
+                                    if(value === dateNow.toISOString().split('T')[0]){
+                                        timeRange.push([workingHours['0'], dateNow.getHours() + ':' + dateNow.getMinutes()]);
+                                    }
+
                                     $('#appointment_time').timepicker('remove');
                                     $('#appointment_time').timepicker({
                                         'showMeridian': false,

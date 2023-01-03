@@ -27,7 +27,7 @@ class SignUpController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             try {
                 $handler->handle($command);
-                $this->addFlash('success', 'Пользователь успешно создан');
+                $this->addFlash('success', 'Вы успешно зарегестрировались');
                 return $this->redirectToRoute('app_home');
             } catch (\DomainException $e) {
                 $this->addFlash('error', $e->getMessage());

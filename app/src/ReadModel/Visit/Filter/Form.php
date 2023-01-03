@@ -20,10 +20,10 @@ class Form extends AbstractType
                 'placeholder' => 'Имя услуги',
                 'onchange' => 'this.form.submit()',
             ]])
-            ->add('dateTime', Type\DateTimeType::class, ['required' => false, 'attr' => [
+            ->add('date', Type\DateType::class, ['required' => false, 'attr' => [
                 'placeholder' => 'Дата',
                 'timezone' => false,
-                'input_format' => 'Y-m-d H:i:s',
+                'input_format' => 'Y-m-d',
                 'input' => 'datetime_immutable',
                 'onchange' => 'this.form.submit()',
             ]]);
